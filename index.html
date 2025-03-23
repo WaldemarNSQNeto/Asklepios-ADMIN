@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisador de PDF</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+    <div id="patient-name-header" class="hidden">
+        <p><span id="patient-name"></span></p>
+    </div>     
+
+
+    <!--Segunda tela-->
+    <div class="container">
+        <h1>ExAsklépios: Extrator de Exames - HC/UFG &#x1F4DA;</h1>
+        <div id="drop-area">
+            <p>Arraste e solte o arquivo PDF aqui ou</p>
+            <input type="file" id="pdfInput" accept=".pdf" hidden>
+            <label for="pdfInput" class="button">Escolha um arquivo</label>
+        </div>
+
+
+    <!--Teste da tela sumário de resultados-->
+    <div id="sumario-resultados" class="hidden">
+    <h2>Sumário dos Resultados</h2>
+    <div class="resultado-container">
+        <div class="resultado-header">
+            <div class="botoes-resultado">
+                <button id="imprimirResultado" style="display: none;">Imprimir</button>
+                <button id="copiarResultado" style="display: none;">Copiar Resultados</button>
+            </div>
+        </div>
+        <div id="resultado" class="resultado"></div>
+    </div>
+    </div>
+
+
+
+
+
+
+    <div id="new-results" class="hidden">
+        <h2>Exames Específicos NÃO-CATALOGADOS: &#x1F4E3;</h2>
+        <div id="output"></div>
+    </div>
+    
+
+
+
+
+
+    <!--Texto corrido com os valores e referenciais-->
+        <div id="results" class="hidden">
+            <h2>Exames de "Rotina":</h2>
+            <p><strong>PCT:</strong> <span id="pct"></span></p>
+            <p><strong>Data do Exame:</strong> <span id="dataExame"></span></p>
+            <p><strong>Hb:</strong> <span id="hb" title="VR: &#10 ♂: 13,0 - 17,0 g/dL &#10 ♀: 12,0 - 15,0 g/dL"></span></p>
+            <p><strong>Ht:</strong> <span id="ht" title="VR: &#10 ♂: 40 - 50 % &#10 ♀: 36,0 - 45,0 %"></span></p>
+            <p><strong>VCM:</strong> <span id="vcm" title="VR: 83 - 101 fL"></span></p>
+            <p><strong>HCM:</strong> <span id="hcm" title="VR: 27 - 32 pg"></span></p>
+            <p><strong>CHCM:</strong> <span id="chcm" title="VR: 31,5 - 34,5 g/dL"></span></p>
+            <p><strong>RDW:</strong> <span id="rdw" title="VR: 11,6 - 14,0 %"></span></p>
+            <p><strong>HEMATOSCOPIA:</strong> <span id="hematoscopia" title="VR: Nada consta"></span></p>
+            <p><strong>Leucócitos Totais:</strong> <span id="leucocitosTotais" title="VR: 4.000 - 10.000 /μL"></span></p>
+            <p><strong>Promielócitos:</strong> <span id="promielocitos" title="VR: 0% / 0/μL"></span></p>
+            <p><strong>Mielócitos:</strong> <span id="mielocitos" title="VR: 0% / 0/μL"></span></p>
+            <p><strong>Metamielócitos:</strong> <span id="metamielocitos" title="VR: 0% / 0/μL"></span></p>
+            <p><strong>Bastões:</strong> <span id="bastoes" title="VR: 2-5% / 80-500/μL"></span></p>
+            <p><strong>Segmentados:</strong> <span id="segmentados" title="VR: 40-78% / 1.600-7.800/μL"></span></p>
+            <p><strong>Eosinófilos:</strong> <span id="eosinofilos" title="VR: 2-5% / 80-500/μL"></span></p>
+            <p><strong>Basófilos:</strong> <span id="basofilos" title="VR: 0-2% / 0-200/μL"></span></p>
+            <p><strong>Linfócitos:</strong> <span id="linfocitos" title="VR: 20-44% / 800-4.400/μL"></span></p>
+            <p><strong>Linfócitos Atípicos:</strong> <span id="linfocitosAtipicos" title="VR: 0% / 0/μL"></span></p>
+            <p><strong>Monócitos:</strong> <span id="monocitos" title="VR: 2-11% / 80-1.100/μL"></span></p>
+            <p><strong>Blastos:</strong> <span id="blastos" title="VR: 0% / 0/μL"></span></p>
+            <p><strong>Plasmócitos:</strong> <span id="plasmocitos" title="VR: 0% / 0/μL"></span></p>
+            <p><strong>PLAQUETAS:</strong> <span id="plaquetas" title="VR: 150.000 - 450.000 /μL"></span></p>
+            <p><strong>Tempo de Protrombina:</strong> <span id="tempoProtrombina" title="VR: 11,0 - 15,0 seg."></span></p>
+            <p><strong>Atividade de Protrombina:</strong> <span id="atividadeProtrombina" title="VR: 70 - 100 %"></span></p>
+            <p><strong>INR:</strong> <span id="inr" title="VR: 1,00 - 1,25"></span></p>
+            <p><strong>UR:</strong> <span id="ureia" title="VR: 10 - 50 mg/dL"></span></p>
+            <p><strong>CR:</strong> <span id="creatinina" title="VR: &#10 ♂: 0,7 - 1,3 &#10 ♀: 0,6 - 1,1 mg/dL"></span></p>
+            <p><strong>Na:</strong> <span id="sodio" title="VR: 136 - 145 mEq/L"></span></p>
+            <p><strong>K:</strong> <span id="potassio" title="VR: 3,5 - 5,1 mEq/L"></span></p>
+            <p><strong>Mg:</strong> <span id="magnesio" title="VR: 1,6 - 2,6 mg/dL"></span></p>
+            <p><strong>Ca Total:</strong> <span id="calcioTotal" title="VR: &#10 Cordão Umbilical: 8,2 - 11,2 mg/dL &#10 Prematuro: 6,2 - 11,0 mg/dL &#10 0 a 10 dias: 7,6 - 10,4 mg/dL&#10 10 dias a 24 meses: 9,0 - 11,0 mg/dL&#10 Crianças de 2 a 12 anos: 8,8 - 10,2 mg/dL&#10 Adulto: 8,4 - 10,2 mg/dL"></span></p>
+            <p><strong>P:</strong> <span id="fosforo" title="VR:&#10Adultos: 2,3 - 4,7 mg/dL&#10Crianças: 4,0 - 7,0 mg/dL"></span></p>
+            <p><strong>Cl:</strong> <span id="cloro" title="VR: 98 - 107 mEq/L"></span></p>
+            <p><strong>Glicemia:</strong> <span id="glicemia" title="VR: &#10 Jejum: 70 - 99 mg/dL &#10 Casual: < 200 mg/dL"></span></p>
+            <p><strong>TGO/AST:</strong> <span id="tgoAst" title="VR: 5 - 34 U/L"></span></p>
+            <p><strong>TGP/ALT:</strong> <span id="tgp" title="VR: < 55 U/L"></span></p>
+            <p><strong>PCR:</strong> <span id="pcr" title="VR: < 0,5 g/dL"></span></p>
+            <p><strong>TTPA / RATIO:</strong> <span id="ttpaRatio" title="VR:&#10TTPA: 24 - 40 seg. &#10RATIO: 0.850 - 1.250"></span></p>
+            <p><strong>BT / BD / BI:</strong> <span id="bilirrubina" title="VR:&#10BT: < 1,20 mg/dL &#10BD: < 0,40 mg/dL &#10BI: < 0,80 mg/dL"></span></p>
+            <p><strong>GASOMETRIA ARTERIAL:</strong> <span id="gasometria" title="VR:&#10 FIO2: correlacionar c/ a clínica &#10 pH: 7,350 - 7,450 &#10 pCO2: 35,0 - 45,0 mmHg &#10 pO2: 83,0 - 108 mmHg &#10 HCO3: 21,0 - 28,0 mmol/L &#10 BE (B): -2 a +3 mmol/L &#10 SatO2: 95 a 98% &#10 Lac: 0 a 2,2 mmol/L"></span></p>
+            <p><strong>GASOMETRIA VENOSA:</strong> <span id="gasometriaVenosa" title="VR:&#10 FIO2: correlacionar c/ a clínica &#10 pH: 7,350 - 7,450 &#10 pCO2: 35,0 - 45,0 mmHg &#10 pO2: 83,0 - 108 mmHg &#10 HCO3: 21,0 - 28,0 mmol/L &#10 BE (B): -2 a +3 mmol/L &#10 SatO2: 95 a 98% &#10 Lac: 0 a 2,20 mmol/L"></span></p>
+            <p><strong>EAS:</strong> <span id="eas" title="VR:&#10 Cor: Amarelo Citrino &#10 Aspecto: Límpido &#10 pH: 5,0 a 7,0 &#10 Densidade: 1.010 a 1.030 &#10 Proteínas: Ausentes &#10 Glicose: Ausente &#10 Cetona: Ausentes &#10 Bilirrubina: Ausente &#10 Sangue: Ausente &#10 Urobilinogênio: Normal &#10 Nitrito: Negativo &#10 Ácido Ascórbico: Ausente &#10 Esterase Leucocitária: Negativo &#10 Células epiteliais: Ausente &#10 Leucócitos / Piócitos: < ou = a 10.000/mL &#10 Hemácias: < ou = a 8.000/mL &#10 Cilindros: Ausente &#10 Cristais: Ausente &#10 Filamentos de Muco: Ausente"></span></p>
+            
+            <p><strong>CPK:</strong> <span id="CPK" title="VR:&#10 ♂: 30-200 U/L &#10 ♀: 29-168U/L"></span></p>
+            <p><strong>D-DÍMERO:</strong> <span id="ddimero" title="VR: < 0,5 mg/L"></span></p>
+            <p><strong>DHL ou LDH:</strong> <span id="LDH" title="VR: 125 - 243 U/L"></span></p>
+            <p><strong>Ferritina:</strong> <span id="ferritina" title="VR:&#10 ♂: 21,81 - 274,6 ng/mL &#10 ♀: 4,63 - 204,0 ng/mL"></span></p>
+            <p><strong>PROTEÍNA TOTAL E FRAÇÕES:</strong> <span id="proteinatotalfracoes" title="VR:&#10 Proteínas Totais: 6,1 - 7,9 g/dL &#10 Albumina: 3,5 - 4,7 g/dL &#10 Globulinas: 1,5 - 3,0 g/dL &#10 Relação ALB/GLOB: 1.0 - 2,0 g/dL"></span></p>
+            <p><strong>TROPONINA "I":</strong> <span id="troponinai" title="VR: Até 0,04 ng/mL"></span></p>
+            <p><strong>ANTI-HBc IgM (HEPATITE B):</strong> <span id="antihbcigm" title="VR: &#10 S/CO < 0,90: Não Reagente &#10 S/CO 0,90 - 0,99: Zona Cinza &#10 S/CO ≥ 1,00: Reagente"></span></p>
+            <p><strong>ANTI-HBc TOTAL (HEPATITE B):</strong> <span id="antihbctotal" title="VR: &#10 S/CO < 0,90: Não Reagente &#10 S/CO 0,90 - 0,99: Zona Cinza &#10 S/CO ≥ 1,00: Reagente"></span></p>
+            <p><strong>ANTI-HBS (HEPATITE B):</strong> <span id="antihbs" title="VR: &#10 < 10 mUI/mL: Não Reagente &#10 > 10 mUI/mL - Reagente"></span></p>    
+            <p><strong>Detecção de Antígeno de Superfície do Vírus da Hepatite B (HBS-Ag):</strong> <span id="dasvhb" title="VR: NÃO REAGENTE"></span></p>
+            <p><strong>HBsAg (HEPATITE B):</strong> <span id="hbsag" title="VR: &#10 S/CO < 0,90: Não Reagente &#10 S/CO 0,90 - 0,99: Zona Cinza &#10 S/CO ≥ 1,00: Reagente"></span></p>
+            <p><strong>Detecção de Anticorpo contra o vírus da hepatite C (anti-HCV):</strong> <span id="dacvhc" title="VR: NÃO REAGENTE"></span></p>
+            <p><strong>ANTI-HCV (HEPATITE C):</strong> <span id="antihcv" title="VR: &#10 S/CO < 0,90: Não Reagente &#10 S/CO 0,90 - 0,99: Zona Cinza &#10 S/CO ≥ 1,00: Reagente"></span></p>            
+            <p><strong>VDRL:</strong> <span id="VDRL" title="VR: NÃO REAGENTE"></span></p>
+            <p><strong>Detecção de Anticorpos ANTI-HIV 1 E 2:</strong> <span id="daANTIHIV1e2" title="VR: NÃO REAGENTE"></span></p>
+            <p><strong>HIV 1 e 2, ANTÍGENO/ANTICORPOS:</strong> <span id="hiv1e2" title="VR: &#10 S/CO < 0,90: Não Reagente &#10 S/CO 0,90 - 0,99: Zona Cinza &#10 S/CO ≥ 1,00: Reagente"></span></p>
+            <p><strong>Anticorpo IgG contra Treponema Pallidum:</strong> <span id="aIgGcTP" title="VR: NÃO REAGENTE"></span></p>
+            <p><strong>IGA:</strong> <span id="IGA" title="VR: 63 - 484 mg/dL"></span></p>
+            <p><strong>IGM:</strong> <span id="IGM" title="VR: 25 - 293 mg/dL"></span></p>
+            <p><strong>IGG:</strong> <span id="IGG" title="VR: 320 - 1.822/dL"></span></p>
+
+            <p><strong>UREIA PÓS HEMODIÁLISE:</strong> <span id="uph" title="VR: 10 - 50 mg/dL"></span></p>
+            <p><strong>Ferro Sérico:</strong> <span id="ferroserico" title="VR: &#10 ♂: 31 - 144 ug /dL &#10 ♀: 25 - 156 ug /dL"></span></p>
+            <p><strong>FA:</strong> <span id="FA" title="VR: &#10 Adultos: 40 - 150 U/L &#10 Crianças (1 a 12 anos): < 500 U/L &#10 Crianças (12 a 15 anos): < 750 U/L"></span></p>
+            <p><strong>Índice de Sat. Transferrina:</strong> <span id="ist" title="VR: 20% - 50 %"></span></p>
+            <p><strong>Lipidograma:</strong> <span id="perfillipidico" title="VR: &#10 Colesterol Total: <200 mg/dL &#10 HDL: ♂ > 45 mg/dL / ♀ > 40 mg/dL &#10 LDL: < 130 mg/dL &#10 VLDL: < 40 mg/dL &#10 Triglicerides: < 150 mg/dL &#10 Índice de Castelli I: < 4,4 &#10 Índice de Castelli I: < 3,2"></span></p>
+            <p><strong>T4 Livre:</strong> <span id="T4" title="VR: 0,70 - 1,48 ng/dL"></span></p>
+            <p><strong>TSH:</strong> <span id="TSH" title="VR: 0,35 - 4,94 uIU/mL &#10 Inferior a um mês: 0,51 - 11,30 uIU/mL &#10 De 1 mês a 11 anos: 0,79 - 5,85 uIU/mL &#10 &#10 Gestantes: &#10  1º trimestre: 0,05 - 3,70 uIU/mL &#10  2º trimestre: 0,31 - 4,35 uIU/mL &#10  3º trimestre: 0,41 - 5,18 uIU/mL"></span></p>
+            <p><strong>Vitamina D - 25-HIDROXI:</strong> <span id="vitaminaD" title="VR: > 20 ng/mL"></span></p>
+            <p><strong>PTH Intacto:</strong> <span id="PTHintacto" title="VR: 15,0 - 68,3 pg/mL"></span></p>
+            <p><strong>GAMA GGT:</strong> <span id="gamaGGT" title="VR: &#10 ♂: 12 - 64 U/L &#10 ♀: 9 - 36 U/L"></span></p>
+            <p><strong>Lipase:</strong> <span id="lipase" title="VR: 8 - 78 U/L"></span></p>
+            <p><strong>Amilase:</strong> <span id="amilase" title="VR: &#10 Recém Nascido: 5 - 65 U/L  &#10 Adulto: 25 - 125 U/L &#10 >70 anos: 20 - 160 U/LL"></span></p>
+            <p><strong>Vitamina B12:</strong> <span id="vitB12" title="VR: 187 - 883 pg/mL"></span></p>
+            <p><strong>Fibrinogênio:</strong> <span id="fibrinogenio" title="VR: 180 - 350 mg/dL"></span></p>
+            <p><strong>CK-MB:</strong> <span id="CKMB" title="VR: < 25 U/L"></span></p>
+
+
+
+
+
+
+            
+            <label for="fullTextOutput">Texto Completo do PDF:</label>
+            <p id="fullTextOutput"></p>
+            </div>
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+            <script src="script.js"></script>
+        <button id="resetButton">Escolher Novo Documento</button>
+  </div>
+  
+    </body>
+</html>

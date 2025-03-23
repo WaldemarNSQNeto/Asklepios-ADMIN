@@ -1,0 +1,340 @@
+/* styles.css */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e9ecef;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #343a40;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 800px;
+    width: 95%;
+    margin: 20px;
+}
+
+h1 {
+    margin-bottom: 30px;
+    color: #212529;
+    font-weight: 600;
+}
+
+input[type="file"] {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.hidden {
+    display: none;
+}
+
+#results {
+    text-align: left;
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+}
+
+#results p {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 4px;
+    display: block; /* Changed to block */
+    overflow: hidden; /* Added overflow: hidden */
+}
+
+/* Estilo para linhas ÍMPARES */
+#results p:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+/* Estilo para linhas PARES */
+#results p:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+#results strong {
+    font-weight: 600;
+    color: #495057;
+    float: left; /* Changed to float: left */
+    width: 250px; /* Back to fixed width */
+    box-sizing: border-box; /* Added box-sizing */
+}
+
+#results span {
+    font-weight: 400;
+    color: #343a40;
+    display: block; /* Added display: block */
+    margin-left: 250px; /*compensates the width of the strong */
+    box-sizing: border-box; /* Added box-sizing */
+
+}
+
+#resetButton {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 15px;
+}
+
+#resetButton:hover {
+    background-color: #0056b3;
+}
+
+/* Media Queries para Responsividade */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    #results strong {
+        width: 100%; /* Full width on smaller screens */
+        float: none; /* Remove float on smaller screens */
+        margin-bottom: 5px;
+    }
+
+    #results span {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.5em;
+    }
+
+    #results p {
+        font-size: 0.9em;
+    }
+}
+
+#patient-name-header {
+    background-color: #fcf6a3;
+    padding: 0px;
+    text-align: center; /* Centraliza o texto horizontalmente */
+    font-weight: bold;
+    position: fixed; /* Torna o elemento fixo */
+    top: 10px; /* Fixa no topo */
+    width: 100%; /* Ocupa toda a largura da janela */
+    z-index: 100; /* Garante que ficará acima dos outros elementos */
+    border-bottom: 1px solid #0a3561;
+    border-radius: 122px;
+    max-width: 800px;
+    margin: 0 auto; /* Centraliza o elemento horizontalmente */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+@media (max-width: 768px) {
+    #patient-name-header{
+        text-align: center;
+    }
+}
+
+/*-----*/
+
+/* Estilos para os tooltips */
+
+  
+span[title]:hover::before,
+span[title]:hover::after {
+  opacity: 1;
+  pointer-events: none;
+}
+
+span[title]::before {
+  content: attr(title);
+  position: absolute;
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  white-space: pre-wrap;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+span[title]::after {
+  content: "";
+  position: absolute;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+span[title]:hover::before {
+  top: -5px;
+}
+
+span[title]:hover::after {
+  top: -10px;
+}
+
+/* Estilos para a área de arrastar e soltar */
+#drop-area {
+    border: 2px dashed #ccc; /* Borda tracejada */
+    border-radius: 20px;
+    padding: 50px; /* Aumenta o padding para criar uma área maior */
+    text-align: center;
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+    margin-bottom: 20px; /* Adiciona uma margem inferior */
+    background-color: #f8f8f8; /* Cor de fundo */
+    transition: background-color 0.3s ease; /* Transição suave para a cor de fundo */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#drop-area.highlight {
+    background-color: #e0e0e0; /* Cor de fundo quando o arquivo está sendo arrastado */
+}
+
+#drop-area p {
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+/* Estilos para o label */
+.button {
+    background-color: #4CAF50; /* Cor de fundo do botão */
+    color: white; /* Cor do texto do botão */
+    padding: 10px 20px; /* Padding do botão */
+    border: none; /* Remove a borda do botão */
+    border-radius: 5px; /* Borda arredondada do botão */
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+    font-size: 1em; /* Tamanho da fonte do botão */
+    transition: background-color 0.3s ease; /* Transição suave para a cor de fundo */
+}
+
+.button:hover {
+    background-color: #367c39; /* Cor de fundo do botão ao passar o mouse */
+}
+
+/* Esconde o input file */
+input[type="file"] {
+    display: none;
+}
+
+
+
+/* Estilos para a nova área de resultados */
+#new-results {
+    text-align: left;
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+}
+
+#new-results h2 {
+    margin-bottom: 10px;
+}
+
+#output {
+    margin-top: 10px;
+    text-align: left;
+    font-size: 14px;
+    color: #333;
+    max-height: 300px; /* Limita a altura da área de saída */
+    overflow-y: auto; /* Adiciona rolagem vertical se o conteúdo for longo */
+    border: 1px solid #ddd;
+    padding: 12px;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+/* Adicionando margem superior ao primeiro item */
+#output .result-item:first-child {
+    margin-top: 20px; /* Ajuste o valor conforme necessário */
+    margin-left: 200;
+}
+
+/* Estilos para cada item de resultado */
+.result-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.result-item label {
+    flex-grow: 1;
+    margin-right: 10px;
+    font-weight: 550;
+}
+
+.result-item input[type="text"] {
+    flex-grow: 0; /* Permite que o input cresça para ocupar o espaço disponível */
+    flex-basis: 250px; /* Define um tamanho inicial para o input */
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-width: 00px; /* Define uma largura mínima para o input */
+}
+
+/* Estilo para linhas ÍMPARES */
+#output .result-item:nth-child(odd) {
+    background-color: #ffffff; /* Cor de fundo para linhas ímpares */
+}
+
+/* Estilo para linhas PARES */
+#output .result-item:nth-child(even) {
+    background-color: #f8f9fa; /* Cor de fundo para linhas pares */
+}
+
+
+
+
+/* Estilos para o link de suporte */
+.support-link {
+    color: #007bff; /* Cor do link */
+    text-decoration: underline; /* Sublinha o link */
+    cursor: pointer; /* Muda o cursor para uma mãozinha */
+    font-weight: bold; /* Deixa o link em negrito */
+}
+
+.support-link:hover {
+    color: #0056b3; /* Muda a cor do link ao passar o mouse */
+}
+
+
+
+
+
+
+
