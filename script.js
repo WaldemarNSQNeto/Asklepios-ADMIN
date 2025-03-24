@@ -113,7 +113,7 @@ async function analyzePDF(pdfData) {
         
         // Cria um elemento <p> para a mensagem
         const messageElement = document.createElement('p');
-        messageElement.innerHTML = `<strong>⮑ Aqui estão exames localizados pelo Software, mas que não estão salvos na base de dados deste site.</strong><br><strong>⮑ CONFIRA CUIDADOSAMENTE OS VALORES AQUI APRESENTADOS E, CASO CONSTE APENAS O NOME DO EXAME, PREENCHA COM AS DEVIDAS INFORMAÇÕES NO RESPECTIVO ESPAÇO!</strong><br><strong>⮑ No mais, favor entrar em contato com o <a href="https://w.app/asklepios_solucoes_medicas" target="_blank" class="support-link">suporte</a> para que possamos acrescentá-los! \uD83D\uDE0A</strong>`;
+        messageElement.innerHTML = `<strong>⮑ Dada a grande quantidade e variedade de exames disponíveis em nosso Hospital, nem todos ainda se encontram catalogados na base de dados deste site. Nesses casos, eles aparecerão relacionados nesta seção.</strong><br><strong>⮑ CONFIRA CUIDADOSAMENTE OS VALORES AQUI APRESENTADOS E, CASO CONSTE APENAS O NOME DO EXAME, PREENCHA COM AS DEVIDAS INFORMAÇÕES NO RESPECTIVO ESPAÇO!</strong><br><strong>⮑ No mais, favor entrar em contato com o <a href="https://w.app/asklepios_solucoes_medicas" target="_blank" class="support-link">suporte</a> para que possamos acrescentá-los! \uD83D\uDE0A</strong>`;
 
         outputDiv.appendChild(messageElement);
         
@@ -175,6 +175,9 @@ async function analyzePDF(pdfData) {
 function extractData(text) {
     // Expressões regulares ajustadas
     const pctRegex = /Nome\s*:\s*(.*?)\s*Procedência\s*:/;
+    const sexoRegex = /([A-Z])\s*Data\s+de\s+Impressão/i;
+    const idadeRegex = /Data\s+de\s+Nasc\.\s*:\s*(\d{2}\/\d{2}\/\d{4})/i;
+
     const dataExameRegex = /Data de Atendimento\s*:\s*(\d{2}\/\d{2}\/\d{4})/;
     const hbRegex = /Hemoglobina[\s\S]*?\.+\s*:\s*([\d.,]+)(?=\s*g\/dL)/;
     const htRegex = /Hematócrito\.+:\s*([\d.,]+)/;
@@ -366,7 +369,21 @@ function extractData(text) {
     const materialPFRegex = /PESQUISA\s+DE\s+FUNGOS[\s\S]*?Material:\s*([^\n]+?)(?=\s+Método)/i;
     const resultadoPFRegex = /PESQUISA\s+DE\s+FUNGOS[\s\S]*?Resultado\s*\.+\s*:\s*([^\n]+?)(?=\s+Data\s+e\s+Hora)/i;
 
+    //CULTURA DE FUNGOS
+    const CFExistRegex = /CULTURA DE FUNGOS/;
+    const materialCFRegex = /CULTURA\s+DE\s+FUNGOS[\s\S]*?Material:\s*([^\n]+?)(?=\s+Método)/i;
+    const resultadoCFRegex = /CULTURA\s+DE\s+FUNGOS[\s\S]*?Resultado:\s*[\.\s]*([\s\S]*?)(?=\s+Valor\s+de\s+Referência:|Data\s+e\s+Hora)/i;
     
+    //CULTURA MICOBACTÉRIAS:
+    const CMExistRegex = /CULTURA MICOBACTÉRIAS/;
+    const materialCMRegex = /CULTURA\s+MICOBACTÉRIAS[\s\S]*?Material:\s*([^\n]+?)(?=\s+Método)/i;
+    const resultadoCMRegex = /CULTURA\s+DE\s+FUNGOS[\s\S]*?Resultado:\s*[\.\s]*([\s\S]*?)(?=\s+Valor\s+de\s+Referência:|Data\s+e\s+Hora)/i;
+
+    //HEMOCULTURA:
+    const hemoculturaExistRegex = /HEMOCULTURA \(AERÓBIOS E LEVEDURAS\)/;
+    const resultadohemoculturaRegex = /HEMOCULTURA\s*\(AERÓBIOS\s+E\s+LEVEDURAS\)[\s\S]*?Resultado\s*:\s*([\s\S]+?)(?=\s+(?:Observação|Data\s+e\s+Hora))/i;
+    const OBShemoculturaRegex = /HEMOCULTURA\s*\(AERÓBIOS\s+E\s+LEVEDURAS\)[\s\S]*?Observação\s*:\s*([\s\S]+?)(?=\s+Valor\s+de\s+Referência)/i;
+
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -374,6 +391,8 @@ function extractData(text) {
 
     // Extrai os valores
     const pctMatch = text.match(pctRegex);
+    const sexoMatch = text.match(sexoRegex);
+    const idadeMatch = text.match(idadeRegex);
     const dataExameMatch = text.match(dataExameRegex);
     const hbMatch = text.match(hbRegex);
     const htMatch = text.match(htRegex);
@@ -560,9 +579,23 @@ function extractData(text) {
     const materialPFMatch = text.match(materialPFRegex);
     const resultadoPFMatch = text.match(resultadoPFRegex);
 
+    //CULTURA DE FUNGOS
+    const CFExistMatch = text.match(CFExistRegex);
+    const materialCFMatch = text.match(materialCFRegex);
+    const resultadoCFMatch = text.match(resultadoCFRegex);
+
+    //CULTURA MICOBACTÉRIAS:
+    const CMExistMatch = text.match(CMExistRegex);
+    const materialCMMatch = text.match(materialCMRegex);
+    const resultadoCMMatch = text.match(resultadoCMRegex);
+
+    //HEMOCULTURA:
+    const hemoculturaExistMatch = text.match(hemoculturaExistRegex);
+    const resultadohemoculturaMatch = text.match(resultadohemoculturaRegex);
+    const OBShemoculturaMatch = text.match(OBShemoculturaRegex);
 
     
-    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
     if (pctMatch) {
@@ -572,6 +605,31 @@ function extractData(text) {
    
     // Exibe os resultados
     document.getElementById('pct').textContent = pctMatch ? pctMatch[1].trim() : 'Não encontrado';
+    document.getElementById('sexo').textContent = sexoMatch ? sexoMatch[1].trim() : 'Não encontrado';
+
+    //Idade:
+    // Extrai a data de nascimento e calcula a idade:
+    if (idadeMatch) {
+      const dataNascimentoStr = idadeMatch[1].trim();
+      const dataNascimento = new Date(dataNascimentoStr.split('/').reverse().join('-')); // Converte para o formato YYYY-MM-DD
+      const hoje = new Date();
+
+      const diffEmMilissegundos = hoje - dataNascimento;
+      const diffEmDias = Math.floor(diffEmMilissegundos / (1000 * 60 * 60 * 24));
+      const diffEmAnos = Math.floor(diffEmDias / 365.25); // Considera anos bissextos
+      const diffEmMeses = Math.floor(diffEmDias / 30.4375); // Média de dias por mês
+      const mesesRestantes = diffEmMeses % 12;
+      const diasRestantes = diffEmDias % 30;
+
+      document.getElementById('idade').textContent = `${diffEmAnos} ano(s), ${mesesRestantes} mês(es) e ${diasRestantes} dia(s)`;
+    } else {
+        document.getElementById('idade').textContent = 'Não encontrado';
+    }
+
+    //Sexo:
+    document.getElementById('sexo').textContent = sexoMatch ? sexoMatch[1].trim() : 'Não encontrado';
+
+    //Exames:
     document.getElementById('dataExame').textContent = dataExameMatch ? dataExameMatch[1].trim() : 'Não encontrado';
     document.getElementById('hb').textContent = hbMatch ? hbMatch[1].trim() : 'Não encontrado';
     document.getElementById('ht').textContent = htMatch ? htMatch[1].trim() : 'Não encontrado';
@@ -610,9 +668,7 @@ function extractData(text) {
     document.getElementById('tgoAst').textContent = tgoAstMatch ? tgoAstMatch[1].trim() : 'Não encontrado';
     document.getElementById('tgp').textContent = tgpAltMatch ? tgpAltMatch[1].trim() : 'Não encontrado';
 
-    document.getElementById('CPK').textContent = CPKMatch ? CPKMatch[1].trim() : 'Não encontrado';
     document.getElementById('ddimero').textContent = ddimeroMatch ? ddimeroMatch[1].trim() : 'Não encontrado';
-    document.getElementById('ferritina').textContent = ferritinaMatch ? ferritinaMatch[1].trim() : 'Não encontrado';
     
     // Exibição dos resultados de PROTEÍNAS TOTAL E FRAÇÕES
     if (proteinatotalfracoesExistMatch) {
@@ -646,11 +702,7 @@ function extractData(text) {
     }
 
     //CONTINUAÇÃO
-    document.getElementById('ferroserico').textContent = ferrosericoMatch ? ferrosericoMatch[1].trim() : 'Não encontrado';
     document.getElementById('FA').textContent = FAMatch ? FAMatch[1].trim() : 'Não encontrado';
-    document.getElementById('TSH').textContent = TSHMatch ? TSHMatch[1].trim() : 'Não encontrado';
-    document.getElementById('gamaGGT').textContent = gamaGGTMatch ? gamaGGTMatch[1].trim() : 'Não encontrado';
-    document.getElementById('amilase').textContent = amilaseMatch ? amilaseMatch[1].trim() : 'Não encontrado';
     document.getElementById('dacvhc').textContent = dacvhcMatch ? dacvhcMatch[1].trim() : 'Não encontrado';
     document.getElementById('dasvhb').textContent = dasvhbMatch ? dasvhbMatch[1].trim() : 'Não encontrado';
     document.getElementById('VDRL').textContent = VDRLMatch ? VDRLMatch[1].trim() : 'Não encontrado';
@@ -662,6 +714,94 @@ function extractData(text) {
 
     
     // <<<<<<<<<<<<<<<<<<<<<NORMAIS, MAS COM VALOR DE REFERÊNCIA:>>>>>>>>>>>>>>>>>>>>>
+    //CPK:
+    if (CPKMatch && sexoMatch) {
+      const valorCPK = CPKMatch[1].trim();
+      const sexo = sexoMatch[1].trim();
+      const interpretacao = interpretarCPK(valorCPK, sexo);
+      document.getElementById('CPK').textContent = `${valorCPK} ${interpretacao}`;
+    } else {
+        document.getElementById('CPK').textContent = 'Não encontrado';
+    }
+
+    //Ferritina:
+    if (ferritinaMatch && sexoMatch) {
+      const valorFerritina = ferritinaMatch[1].trim();
+      const sexo = sexoMatch[1].trim();
+      const interpretacao = interpretarFerritina(valorFerritina, sexo);
+      document.getElementById('ferritina').textContent = `${valorFerritina} ${interpretacao}`;
+    } else {
+        document.getElementById('ferritina').textContent = 'Não encontrado';
+    }
+
+    //Ferro Sérico:
+    if (ferrosericoMatch && sexoMatch) {
+      const valorFerroserico = ferrosericoMatch[1].trim();
+      const sexo = sexoMatch[1].trim();
+      const interpretacao = interpretarFerroserico(valorFerroserico, sexo);
+      document.getElementById('ferroserico').textContent = `${valorFerroserico} ${interpretacao}`;
+    } else {
+        document.getElementById('ferroserico').textContent = 'Não encontrado';
+    }
+
+    //FA:
+    if (FAMatch && idadeMatch) {
+      const valorFA = FAMatch[1].trim();
+      const dataNascimentoStr = idadeMatch[1].trim();
+      const dataNascimento = new Date(dataNascimentoStr.split('/').reverse().join('-'));
+      const hoje = new Date();
+      const diffEmMilissegundos = hoje - dataNascimento;
+      const diffEmDias = Math.floor(diffEmMilissegundos / (1000 * 60 * 60 * 24));
+      const diffEmAnos = Math.floor(diffEmDias / 365.25);
+
+      const interpretacao = interpretarFA(valorFA, diffEmAnos);
+      document.getElementById('FA').textContent = `${valorFA} ${interpretacao}`;
+    } else {
+        document.getElementById('FA').textContent = 'Não encontrado';
+    }
+
+    //TSH:
+    if (TSHMatch && idadeMatch) {
+      const valorTSH = TSHMatch[1].trim();
+      const dataNascimentoStr = idadeMatch[1].trim();
+      const dataNascimento = new Date(dataNascimentoStr.split('/').reverse().join('-'));
+      const hoje = new Date();
+      const diffEmMilissegundos = hoje - dataNascimento;
+      const diffEmDias = Math.floor(diffEmMilissegundos / (1000 * 60 * 60 * 24));
+      const diffEmAnos = Math.floor(diffEmDias / 365.25);
+
+      const interpretacao = interpretarTSH(valorTSH, diffEmDias, diffEmAnos);
+      document.getElementById('TSH').textContent = `${valorTSH} ${interpretacao}`;
+    } else {
+        document.getElementById('TSH').textContent = 'Não encontrado';
+    }
+    
+    //Gama GGT:
+    if (gamaGGTMatch && sexoMatch) {
+      const valorGamaGGT = gamaGGTMatch[1].trim();
+      const sexo = sexoMatch[1].trim();
+      const interpretacao = interpretarGamaGGT(valorGamaGGT, sexo);
+      document.getElementById('gamaGGT').textContent = `${valorGamaGGT} ${interpretacao}`;
+    } else {
+        document.getElementById('gamaGGT').textContent = 'Não encontrado';
+    }
+
+    //Amilase:
+    if (amilaseMatch && idadeMatch) {
+      const valorAmilase = amilaseMatch[1].trim();
+      const dataNascimentoStr = idadeMatch[1].trim();
+      const dataNascimento = new Date(dataNascimentoStr.split('/').reverse().join('-'));
+      const hoje = new Date();
+      const diffEmMilissegundos = hoje - dataNascimento;
+      const diffEmDias = Math.floor(diffEmMilissegundos / (1000 * 60 * 60 * 24));
+      const diffEmAnos = Math.floor(diffEmDias / 365.25);
+
+      const interpretacao = interpretarAmilase(valorAmilase, diffEmDias, diffEmAnos);
+      document.getElementById('amilase').textContent = `${valorAmilase} ${interpretacao}`;
+    } else {
+        document.getElementById('amilase').textContent = 'Não encontrado';
+    }
+
     //D-Dímero:
     if (ddimeroMatch) {
       const valorDdimero = ddimeroMatch[1].trim();
@@ -854,8 +994,6 @@ function extractData(text) {
     }
     
 
-
-
     //CLÁSSICOS
     if (ttpExistMatch){
         document.getElementById('ttpaRatio').textContent = ttpaMatch && ratioMatch ? `${ttpaMatch[1].trim()} / ${ratioMatch[1].trim()}` : 'Não encontrado';
@@ -972,7 +1110,6 @@ function extractData(text) {
         document.getElementById('CLB').textContent = 'Não encontrado';
     }
 
-
     // BAAR
     if (BAARExistMatch) {
       const materialBAAR = materialBAARMatch ? materialBAARMatch[1].trim() : 'Não encontrado';
@@ -1010,6 +1147,19 @@ function extractData(text) {
         document.getElementById('CBA').textContent = 'Não encontrado';
     }
 
+    //CULTURA MICOBACTÉRIAS:
+    if (CMExistMatch) {
+        const materialCM = materialCMMatch ? materialCMMatch[1].trim() : 'Não encontrado';
+        const resultadoCM = resultadoCMMatch ? resultadoCMMatch[1].trim() : 'Não encontrado';
+  
+        const CMText = `Material: ${materialCM}<br>Resultado: ${resultadoCM}`;
+  
+        document.getElementById('CM').innerHTML = CMText;
+      } else {
+          document.getElementById('CM').textContent = 'Não encontrado';
+      }
+  
+    
     //PESQUISA DE FUNGOS
     if (PFExistMatch) {
       const materialPF = materialPFMatch ? materialPFMatch[1].trim() : 'Não encontrado';
@@ -1022,18 +1172,41 @@ function extractData(text) {
         document.getElementById('PF').textContent = 'Não encontrado';
     }
 
+    //CULTURA DE FUNGOS
+    if (CFExistMatch) {
+      const materialCF = materialCFMatch ? materialCFMatch[1].trim() : 'Não encontrado';
+      const resultadoCF = resultadoCFMatch ? resultadoCFMatch[1].trim() : 'Não encontrado';
+
+      const CFText = `Material: ${materialCF}<br>Resultado: ${resultadoCF}`;
+
+      document.getElementById('CF').innerHTML = CFText;
+    } else {
+        document.getElementById('CF').textContent = 'Não encontrado';
+    }
+
+     //HEMOCULTURA
+     if (hemoculturaExistMatch) {
+        const resultadohemocultura = resultadohemoculturaMatch ? resultadohemoculturaMatch[1].trim() : 'Não encontrado';
+        let OBShemocultura = OBShemoculturaMatch ? OBShemoculturaMatch[1].trim() : 'Nada consta';
+        OBShemocultura = OBShemocultura.replace(/^s\s*/, '');
+        const hemoculturaText = `Resultado: ${resultadohemocultura}<br> OBS: ${OBShemocultura}`;
+  
+        document.getElementById('hemocultura').innerHTML = hemoculturaText;
+      } else {
+          document.getElementById('hemocultura').textContent = 'Não encontrado';
+      }
     
 
 
 
 
-    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
   
     
         
 
 
-    // Mostra a seção de resultados
+// Mostra a seção de resultados
 document.getElementById('results').classList.remove('hidden');
 // Exibe o texto completo do PDF
 document.getElementById('fullTextOutput').textContent = fullTextFromPDF;
@@ -1042,19 +1215,51 @@ document.getElementById('fullTextOutput').textContent = fullTextFromPDF;
 
 // Adiciona um evento ao botão "Escolher Novo Documento"
 document.getElementById('resetButton').addEventListener('click', function () {
-    // Limpa o campo de upload
-    document.getElementById('pdfInput').value = '';
+  // Limpa o campo de upload
+  document.getElementById('pdfInput').value = '';
 
-    // Oculta a seção de resultados
-    document.getElementById('results').classList.add('hidden');
+  // Oculta a seção de resultados
+  document.getElementById('results').classList.add('hidden');
 
-    //Oculta o header do nome do paciente
-    document.getElementById('patient-name-header').classList.add('hidden');
+  //Oculta o header do nome do paciente
+  document.getElementById('patient-name-header').classList.add('hidden');
 
-    //Faz alguma coisa com a SUPRASSUMO
-    document.getElementById('new-results').classList.add('hidden');
+  //Faz alguma coisa com a SUPRASSUMO
+  document.getElementById('new-results').classList.add('hidden');
 
+  // Limpar os campos de resultado
+  const resultSpans = document.querySelectorAll('#results span');
+  resultSpans.forEach(span => {
+      span.textContent = '';
+  });
+
+  //Limpar os campos de resultado dos HARDCASES
+  const resultDivs = document.querySelectorAll('#results div');
+  resultDivs.forEach(div => {
+      div.innerHTML = '';
+  });
+
+  // Limpar a variável fullTextFromPDF
+  fullTextFromPDF = '';
+  document.getElementById('fullTextOutput').textContent = '';
+
+  //Limpar a área de exames não catalogados
+  const outputDiv = document.getElementById('output');
+  outputDiv.innerHTML = '';
+
+  // Remover o botão "Copiar" da área de exames não catalogados
+  const copyButton = outputDiv.querySelector('button');
+  if (copyButton) {
+      outputDiv.removeChild(copyButton);
+  }
+
+  // Remover a mensagem da área de exames não catalogados
+  const messageElement = outputDiv.querySelector('p');
+  if (messageElement) {
+      outputDiv.removeChild(messageElement);
+  }
 });
+
 
 
 
@@ -1155,7 +1360,7 @@ document.getElementById('process-pdf').addEventListener('click', async () => {
       "TSH - HORMONIO TIREOESTIMULANTE", "VITAMINA D - 25 HIDROXI", "PTH INTACTO", "GAMA GGT", "LIPASE", "AMILASE", "VITAMINA B12", "FIBRINOGENIO",
       "Detecção de Anticorpo contra o vírus da hepatite C (anti-HCV)", "Detecção de Antígeno de Superfície do Vírus da Hepate B (HBS-Ag)", "VDRL", "ANTICORPO IgG CONTRA TREPONEMA PALLIDUM",
       "DETECÇÃO DE ANTICORPOS ANTI-HIV 1 E 2", "CK-MB", "BIOQUIMICA LÍQUIDOS BIOLÓGICOS", "CITOMETRIA LÍQUIDOS BIOLÓGICOS", "BACILOSCOPIA (BAAR)", "BACTERIOSCOPIA (GRAM)",
-      "CULTURA DE BACTERIAS AERÓBIAS", "PESQUISA DE FUNGOS", "UROCULTURA",
+      "CULTURA DE BACTERIAS AERÓBIAS", "PESQUISA DE FUNGOS", "UROCULTURA", "CULTURA DE FUNGOS", "CULTURA MICOBACTÉRIAS",
 
     ];
     
@@ -1443,7 +1648,7 @@ function interpretarT4(valor) {
   }
 }
 
-//Vitamina D:
+//Vitamina D - 25-HIDROXI:
 function interpretarVitaminaD(valor) {
   const valorNumerico = parseFloat(valor.replace(',', '.')); // Converte para número, substituindo vírgula por ponto
   if (valorNumerico > 20) {      
@@ -1541,3 +1746,234 @@ function interpretarDdimero(valor) {
       return "Valor Inválido"; // Caso o valor não se encaixe em nenhuma categoria
   }
 }
+
+//Amilase:
+function interpretarAmilase(valor, diffEmDias, diffEmAnos) {
+  const valorNumerico = parseFloat(valor.replace(',', '.')); // Converte para número, substituindo vírgula por ponto
+  
+  if (isNaN(valorNumerico)) {
+      return "Valor Inválido";
+  }
+
+  if (diffEmDias <= 28) { // Até 28 dias
+      if (valorNumerico > 65) {
+          return "\u23EB"; // Seta para cima (maior que 65)
+      } else if (valorNumerico >= 5 && valorNumerico <= 65) {
+          return "\uD83C\uDD97"; // Letra "OK" (entre 5 e 65)
+      } else if (valorNumerico < 5) {
+          return "\u23EC"; // Seta para baixo (menor que 5)
+      }
+  } else if (diffEmAnos >= 70) { // 70 anos completos para cima
+      if (valorNumerico > 160) {
+          return "\u23EB"; // Seta para cima (maior que 160)
+      } else if (valorNumerico >= 20 && valorNumerico <= 160) {
+          return "\uD83C\uDD97"; // Letra "OK" (entre 20 e 160)
+      } else if (valorNumerico < 20) {
+          return "\u23EC"; // Seta para baixo (menor que 20)
+      }
+  } else { // De 28 dias até 70 anos incompletos
+      if (valorNumerico > 125) {
+          return "\u23EB"; // Seta para cima (maior que 125)
+      } else if (valorNumerico >= 25 && valorNumerico <= 125) {
+          return "\uD83C\uDD97"; // Letra "OK" (entre 25 e 125)
+      } else if (valorNumerico < 25) {
+          return "\u23EC"; // Seta para baixo (menor que 25)
+      }
+  }
+  return "Valor Inválido"; // Caso o valor não se encaixe em nenhuma categoria
+}
+
+//Gama GGT:
+function interpretarGamaGGT(valor, sexo) {
+  const valorNumerico = parseFloat(valor.replace(',', '.')); // Converte para número, substituindo vírgula por ponto
+
+  if (isNaN(valorNumerico)) {
+      return "Valor Inválido";
+  }
+
+  if (sexo === 'F') { // Sexo feminino
+      if (valorNumerico > 36) {
+          return "\u23EB"; // Seta para cima (maior que 36)
+      } else if (valorNumerico >= 9 && valorNumerico <= 36) {
+          return "\uD83C\uDD97"; // Letra "OK" (entre 9 e 36)
+      } else if (valorNumerico < 9) {
+          return "\u23EC"; // Seta para baixo (menor que 9)
+      }
+  } else if (sexo === 'M') { // Sexo masculino
+      if (valorNumerico > 64) {
+          return "\u23EB"; // Seta para cima (maior que 64)
+      } else if (valorNumerico >= 12 && valorNumerico <= 64) {
+          return "\uD83C\uDD97"; // Letra "OK" (entre 12 e 64)
+      } else if (valorNumerico < 12) {
+          return "\u23EC"; // Seta para baixo (menor que 12)
+      }
+  } else {
+      return "Sexo Inválido"; // Caso o sexo não seja M ou F
+  }
+  return "Valor Inválido"; // Caso o valor não se encaixe em nenhuma categoria
+}
+
+//TSH:
+function interpretarTSH(valor, diffEmDias, diffEmAnos) {
+  const valorNumerico = parseFloat(valor.replace(',', '.')); // Converte para número, substituindo vírgula por ponto
+
+  if (isNaN(valorNumerico)) {
+      return "Valor Inválido";
+  }
+
+  if (diffEmDias < 30) { // Inferior a um mês incompleto
+      if (valorNumerico > 11.30) {
+          return "\u23EB"; // Seta para cima (maior que 11.30)
+      } else if (valorNumerico >= 0.51 && valorNumerico <= 11.30) {
+          return "\uD83C\uDD97"; // Letra "OK" (entre 0.51 e 11.30)
+      } else if (valorNumerico < 0.51) {
+          return "\u23EC"; // Seta para baixo (menor que 0.51)
+      }
+  } else if (diffEmAnos < 11) { // Entre um mês completo e 11 anos
+      if (valorNumerico > 5.85) {
+          return "\u23EB"; // Seta para cima (maior que 5.85)
+      } else if (valorNumerico >= 0.79 && valorNumerico <= 5.85) {
+          return "\uD83C\uDD97"; // Letra "OK" (entre 0.79 e 5.85)
+      } else if (valorNumerico < 0.79) {
+          return "\u23EC"; // Seta para baixo (menor que 0.79)
+      }
+  } else { // Acima de 11 anos
+      if (valorNumerico > 4.94) {
+          return "\u23EB"; // Seta para cima (maior que 4.94)
+      } else if (valorNumerico >= 0.35 && valorNumerico <= 4.94) {
+          return "\uD83C\uDD97"; // Letra "OK" (entre 0.35 e 4.94)
+      } else if (valorNumerico < 0.35) {
+          return "\u23EC"; // Seta para baixo (menor que 0.35)
+      }
+  }
+  return "Valor Inválido"; // Caso o valor não se encaixe em nenhuma categoria
+}
+
+//FA:
+function interpretarFA(valor, diffEmAnos) {
+  const valorNumerico = parseFloat(valor.replace(',', '.')); // Converte para número, substituindo vírgula por ponto
+
+  if (isNaN(valorNumerico)) {
+      return "Valor Inválido";
+  }
+
+  if (diffEmAnos < 12 && diffEmAnos >= 1) { // Crianças 1 a 12 anos incompletos
+      if (valorNumerico >= 500) {
+          return "\u23EB"; // Seta para cima (maior ou igual a 500)
+      } else if (valorNumerico < 500) {
+          return "\uD83C\uDD97"; // Letra "OK" (menor que 500)
+      }
+  } else if (diffEmAnos >= 12 && diffEmAnos < 15) { // Crianças 12 anos completos a 15 incompletos
+      if (valorNumerico >= 750) {
+          return "\u23EB"; // Seta para cima (maior ou igual a 750)
+      } else if (valorNumerico < 750) {
+          return "\uD83C\uDD97"; // Letra "OK" (menor que 750)
+      }
+  } else { // 15 completos acima
+      if (valorNumerico > 150) {
+          return "\u23EB"; // Seta para cima (maior que 150)
+      } else if (valorNumerico >= 40 && valorNumerico <= 150) {
+          return "\uD83C\uDD97"; // Letra "OK" (entre 40 e 150)
+      } else if (valorNumerico < 40) {
+          return "\u23EC"; // Seta para baixo (menor que 40)
+      }
+  }
+  return "Valor Inválido"; // Caso o valor não se encaixe em nenhuma categoria
+}
+
+//Ferro Sérico:
+function interpretarFerroserico(valor, sexo) {
+  const valorNumerico = parseFloat(valor.replace(',', '.')); // Converte para número, substituindo vírgula por ponto
+
+  if (isNaN(valorNumerico)) {
+      return "Valor Inválido";
+  }
+
+  if (sexo === 'M') { // Sexo masculino
+      if (valorNumerico > 144) {
+          return "\u23EB"; // Seta para cima (maior que 144)
+      } else if (valorNumerico >= 31 && valorNumerico <= 144) {
+          return "\uD83C\uDD97"; // Letra "OK" (entre 31 e 144)
+      } else if (valorNumerico < 31) {
+          return "\u23EC"; // Seta para baixo (menor que 31)
+      }
+  } else if (sexo === 'F') { // Sexo feminino
+      if (valorNumerico > 156) {
+          return "\u23EB"; // Seta para cima (maior que 156)
+      } else if (valorNumerico >= 25 && valorNumerico <= 156) {
+          return "\uD83C\uDD97"; // Letra "OK" (entre 25 e 156)
+      } else if (valorNumerico < 25) {
+          return "\u23EC"; // Seta para baixo (menor que 25)
+      }
+  } else {
+      return "Sexo Inválido"; // Caso o sexo não seja M ou F
+  }
+  return "Valor Inválido"; // Caso o valor não se encaixe em nenhuma categoria
+}
+
+//Ferritina:
+function interpretarFerritina(valor, sexo) {
+  const valorNumerico = parseFloat(valor.replace(',', '.')); // Converte para número, substituindo vírgula por ponto
+
+  if (isNaN(valorNumerico)) {
+      return "Valor Inválido";
+  }
+
+  if (sexo === 'M') { // Sexo masculino
+      if (valorNumerico > 274.6) {
+          return "\u23EB"; // Seta para cima (maior que 274.6)
+      } else if (valorNumerico >= 21.81 && valorNumerico <= 274.6) {
+          return "\uD83C\uDD97"; // Letra "OK" (entre 21.81 e 274.6)
+      } else if (valorNumerico < 21.81) {
+          return "\u23EC"; // Seta para baixo (menor que 21.81)
+      }
+  } else if (sexo === 'F') { // Sexo feminino
+      if (valorNumerico > 204.0) {
+          return "\u23EB"; // Seta para cima (maior que 204.0)
+      } else if (valorNumerico >= 4.63 && valorNumerico <= 204.0) {
+          return "\uD83C\uDD97"; // Letra "OK" (entre 4.63 e 204.0)
+      } else if (valorNumerico < 4.63) {
+          return "\u23EC"; // Seta para baixo (menor que 4.63)
+      }
+  } else {
+      return "Sexo Inválido"; // Caso o sexo não seja M ou F
+  }
+  return "Valor Inválido"; // Caso o valor não se encaixe em nenhuma categoria
+}
+
+//CPK:
+function interpretarCPK(valor, sexo) {
+  const valorNumerico = parseFloat(valor.replace(',', '.')); // Converte para número, substituindo vírgula por ponto
+
+  if (isNaN(valorNumerico)) {
+      return "Valor Inválido";
+  }
+
+  if (sexo === 'M') { // Sexo masculino
+      if (valorNumerico > 200) {
+          return "\u23EB"; // Seta para cima (maior que 200)
+      } else if (valorNumerico >= 30 && valorNumerico <= 200) {
+          return "\uD83C\uDD97"; // Letra "OK" (entre 30 e 200)
+      } else if (valorNumerico < 30) {
+          return "\u23EC"; // Seta para baixo (menor que 30)
+      }
+  } else if (sexo === 'F') { // Sexo feminino
+      if (valorNumerico > 168) {
+          return "\u23EB"; // Seta para cima (maior que 168)
+      } else if (valorNumerico >= 29 && valorNumerico <= 168) {
+          return "\uD83C\uDD97"; // Letra "OK" (entre 29 e 168)
+      } else if (valorNumerico < 29) {
+          return "\u23EC"; // Seta para baixo (menor que 29)
+      }
+  } else {
+      return "Sexo Inválido"; // Caso o sexo não seja M ou F
+  }
+  return "Valor Inválido"; // Caso o valor não se encaixe em nenhuma categoria
+}
+
+
+
+
+
+
+
