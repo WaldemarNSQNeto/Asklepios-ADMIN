@@ -230,14 +230,13 @@ function extractData(text) {
     const TSHRegex = /TSH\s+-\s+HORMONIO\s+TIREOESTIMULANTE\s*\.+\s*:\s*([\d.,]+)/i;
     const vitaminaDRegex = /VITAMINA\s+D\s+-\s+25\s+HIDROXI\s*\.+\s*:\s*([\d.,]+)/i;
     const PTHintactoRegex = /PTH\s+INTACTO\s*\.+\s*:\s*([\d.,]+)/i;
-    const gamaGGT = /GAMA\s+GGT\s*\.+\s*:\s*([\d.,]+)/i;
-    const lipase = /LIPASE\s*\.+\s*:\s*([\d.,]+)/i;
-    const amilase = /AMILASE\s*\.+\s*:\s*([\d.,]+)/i;
-    const vitB12 = /VITAMINA\s+B12\s*\.+\s*:\s*([^\n]+?)\s+Material:/i;
-    const fibrinogenio = /FIBRINOGENIO\s*\.+\s*:\s*([\d.,]+)/i;
-    const CKMB = /CK-MB\s*\.+\s*:\s*([\d.,]+)/i;
-
-
+    const gamaGGTRegex = /GAMA\s+GGT\s*\.+\s*:\s*([\d.,]+)/i;
+    const lipaseRegex = /LIPASE\s*\.+\s*:\s*([\d.,]+)/i;
+    const amilaseRegex = /AMILASE\s*\.+\s*:\s*([\d.,]+)/i;
+    const vitB12Regex = /VITAMINA\s+B12\s*\.+\s*:\s*([^\n]+?)\s+Material:/i;
+    const fibrinogenioRegex = /FIBRINOGENIO\s*\.+\s*:\s*([\d.,]+)/i;
+    const CKMBRegex = /CK-MB\s*\.+\s*:\s*([\d.,]+)/i;
+    const uroculturaRegex = /UROCULTURA[\s\S]*?Urina\s+Resultado:\s*[\.\s]*([^\n]+?)(?=\s+VALOR\s+DE\s+REFERENCIA:)/i;
 
     // Regex para PROTEÍNA TOTAL E FRAÇÕES:
     const proteinatotalfracoesExistRegex = /PROTEINA TOTAL E FRAÇÕES/;
@@ -269,7 +268,6 @@ function extractData(text) {
     const hiv1e2Regex = /HIV\s+1\s+e\s+2,\s+ANTÍGENO\/ANTICORPOS\s*\.+\s*:\s*([\d.,]+)/i;
     const aIgGcTPRegex = /ANTICORPO\s+IgG\s+CONTRA\s+TREPONEMA\s+PALLIDUM\s+Resultado[\s\S]*?(Não Reagente|Reagente)[\s\S]*?Material/i;
 
-
     //Continuando...
     const ttpExistRegex = /TTP - TEMPO DE TROMBOPLASTINA PARCIAL ATIVADA/;
     const ttpaRegex = /TTPA\s*\.+\s*:\s*([\d.,]+)/;
@@ -297,6 +295,7 @@ function extractData(text) {
     const beVenosoRegex = /BE\s*\(B\)\s*\.+\s*:\s*([\d.,-]+)/;
     const sato2VenosoRegex = /sO²\s*\.*:\s*([\d.,]+)\s*%/;
     const lacVenosoRegex = /Lac\s*\.+\s*:\s*([\d.,]+)/;
+
     // Regex para EAS
     const easExistRegex = /ELEMENTOS ANORMAIS DO SEDIMENTO - EAS/;
     const corRegex = /Cor\s*\.+\s*:\s*([^\s]+(?:\s+[^\s]+)?)(?=\s+(?:[A-Z]|Aspecto))/;
@@ -320,7 +319,54 @@ function extractData(text) {
     const filamentoMucoRegex = /Ausente\s+Filamento de Muco\s*\.+\s*:\s*([\w\s()+-]+?)(?=\s+Ausente)/i;
     const infcomplementaresEASRegex = /Filamento de Muco\s*\.+\s*:\s*(?:Presente\s*\([+]?\)\s*)?(?:Ausente\s*\(s\)\s*|Ausente\s+)?(?<!Ausente\s)\bAusente\b\s*([\s\S]*?)(?=\s*Data e Hora)/i;
     
+    // HARDCASES
+    //BIOQUIMICA LÍQUIDOS BIOLÓGICOS:
+    const BLBExistRegex = /BIOQUIMICA LÍQUIDOS BIOLÓGICOS/;
+    const materialBLBRegex = /BIOQUIMICA\s+LÍQUIDOS\s+BIOLÓGICOS\s+Material:\s*([^\n]*?)(?=\s+Metodo:\s+Enzimático\s+Colorimétrico)/i;
+    const glicoseBLBRegex = /BIOQUIMICA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?Glicose\s*\.+\s*:\s*([\d.,]+)/i;
+    const colesterolBLBRegex = /BIOQUIMICA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?Colesterol\s*\.+\s*:\s*([\d.,]+)/i;
+    const trigliceridesBLBRegex = /BIOQUIMICA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?Triglicerides\s*\.+\s*:\s*([\d.,]+)/i;
+    const proteinatotaisBLBRegex = /BIOQUIMICA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?Proteina\s+Totais\s*\.+\s*:\s*([\d.,]+)/i;
+    const albuminaBLBRegex = /BIOQUIMICA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?Albumina\s*\.+\s*:\s*([\d.,]+)/i;
+    const amilaseBLBRegex = /BIOQUIMICA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?Amilase\s*\.+\s*:\s*([\d.,]+)/i;
+    const DHLBLBRegex = /BIOQUIMICA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?D\.H\.L\s*\.+\s*:\s*([\d.,]+)/i;
+    const pHBLBRegex = /BIOQUIMICA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?p\.H\s*\.+\s*:\s*([\d.,]+)/i;
 
+    //CITOMETRIA LÍQUIDOS BIOLÓGICOS:
+    const CLBExistRegex = /CITOMETRIA LÍQUIDOS BIOLÓGICOS/;
+    const materialCLBRegex = /CITOMETRIA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?Material\s*\.*:\s*([^\n]+?)(?=\s+Cor)/i;
+    const corCLBRegex = /CITOMETRIA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?Cor\s*\.*:\s*([^\n]+?)(?=\s+Valor)/i;
+    const aspectoCLBRegex = /CITOMETRIA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?Aspecto\s*\.*:\s*([^\n]+?)(?=\s+Valor)/i;
+    const leucocitosCLBRegex = /CITOMETRIA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?Leucócitos\s*\.*:\s*([\d.,]+)(?=\s+\/mm3\s+Hemácias)/i;
+    const linfocitosCLBRegex = /CITOMETRIA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?Linfócitos\s*\.*:\s*([\d.,]+)(?=\s*%\s+Neutrófilos)/i;        
+    const neutrofilosCLBRegex = /CITOMETRIA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?Neutrófilos\s*\.*:\s*([\d.,]+)(?=\s*%\s+Monócitos)/i;
+    const monocitosCLBRegex = /CITOMETRIA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?Monócitos\s*\.*:\s*([\d.,]+)(?=\s*%\s+Eosinófilos)/i;
+    const eosinofilosCLBRegex = /CITOMETRIA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?Eosinófilos\s*\.*:\s*([\d.,]+)(?=\s*%\s+data)/i;
+    const hemaciasCLBRegex = /CITOMETRIA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?Hemácias\s*\.*:\s*([\d.,]+)(?=\s+\/mm3\s+DIFERENCIAL)/i;
+    const OBSCLBRegex = /CITOMETRIA\s+LÍQUIDOS\s+BIOLÓGICOS[\s\S]*?Liberado\s+em:\s+\d{2}\/\d{2}\/\d{4}-\d{2}:\d{2}\s*(?:hr|h|hs)\s*([\s\S]*?)(?=\s*\.?\s*Liberado Eletronicamente)/i;
+
+    //BAAR
+    const BAARExistRegex = /BACILOSCOPIA \(BAAR\)/;
+    const materialBAARRegex = /BACILOSCOPIA\s*\(BAAR\)[\s\S]*?Material:\s*([^\n]+?)(?=\s+Método)/i;
+    const resultadoBAARRegex = /BACILOSCOPIA\s*\(BAAR\)[\s\S]*?Resultado\s*\.+\s*:\s*([^\n]+?)(?=\s+Escala\s+semi-quantitativa)/i;
+
+    //GRAM
+    const GRAMExistRegex = /BACTERIOSCOPIA \(GRAM\)/;
+    const materialGRAMRegex = /BACTERIOSCOPIA\s*\(GRAM\)[\s\S]*?Material:\s*([^\n]+?)(?=\s+Método)/i;
+    const resultadoGRAMRegex = /BACTERIOSCOPIA\s*\(GRAM\)[\s\S]*?Resultado\s*\.+\s*:\s*([^\n]+?)(?=\s+Data)/i;
+    
+    //CULTURA DE BACTERIAS AERÓBIAS
+    const CBAExistRegex = /CULTURA DE BACTERIAS AERÓBIAS/;
+    const materialCBARegex = /CULTURA\s+DE\s+BACTERIAS\s+AERÓBIAS[\s\S]*?Material:\s*([^\n]+?)(?=\s+Método)/i;
+    const resultadoCBARegex = /CULTURA\s+DE\s+BACTERIAS\s+AERÓBIAS[\s\S]*?Resultado\s*\.+\s*:\s*([^\n]+?)(?=\s+(?:Valor\s+de\s+Referência|Observação))/i;
+    const OBSCBARegex = /CULTURA\s+DE\s+BACTERIAS\s+AERÓBIAS[\s\S]*?Observação:\s*([\s\S]+?)(?=\s*(?:Valor\s+de\s+Referência|Data\s+e\s+Hora))/i;
+
+    //PESQUISA DE FUNGOS
+    const PFExistRegex = /PESQUISA DE FUNGOS/;
+    const materialPFRegex = /PESQUISA\s+DE\s+FUNGOS[\s\S]*?Material:\s*([^\n]+?)(?=\s+Método)/i;
+    const resultadoPFRegex = /PESQUISA\s+DE\s+FUNGOS[\s\S]*?Resultado\s*\.+\s*:\s*([^\n]+?)(?=\s+Data\s+e\s+Hora)/i;
+
+    
 
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -409,12 +455,13 @@ function extractData(text) {
     const TSHMatch = text.match(TSHRegex);
     const vitaminaDMatch = text.match(vitaminaDRegex);
     const PTHintactoMatch = text.match(PTHintactoRegex);
-    const gamaGGTMatch = text.match(gamaGGT);
-    const lipaseMatch = text.match(lipase);
-    const amilaseMatch = text.match(amilase);
-    const vitB12Match = text.match(vitB12);
-    const fibrinogenioMatch = text.match(fibrinogenio);  
-    const CKMBMatch = text.match(CKMB);
+    const gamaGGTMatch = text.match(gamaGGTRegex);
+    const lipaseMatch = text.match(lipaseRegex);
+    const amilaseMatch = text.match(amilaseRegex);
+    const vitB12Match = text.match(vitB12Regex);
+    const fibrinogenioMatch = text.match(fibrinogenioRegex);  
+    const CKMBMatch = text.match(CKMBRegex);
+    const uroculturaMatch = text.match(uroculturaRegex)
     
 
 
@@ -466,6 +513,54 @@ function extractData(text) {
     const filamentoMucoMatch = text.match(filamentoMucoRegex);
     const infcomplementaresEASMatch = text.match(infcomplementaresEASRegex);
     
+    // Extrai HARDCASES
+    //BIOQUIMICA LÍQUIDOS BIOLÓGICOS
+    const BLBExistMatch = text.match(BLBExistRegex);
+    const materialBLBMatch = text.match(materialBLBRegex);
+    const glicoseBLBMatch = text.match(glicoseBLBRegex);
+    const colesterolBLBMatch = text.match(colesterolBLBRegex);
+    const trigliceridesBLBMatch = text.match(trigliceridesBLBRegex);
+    const proteinatotaisBLBMatch = text.match(proteinatotaisBLBRegex);
+    const albuminaBLBMatch = text.match(albuminaBLBRegex);
+    const amilaseBLBMatch = text.match(amilaseBLBRegex);
+    const DHLBLBMatch = text.match(DHLBLBRegex);
+    const pHBLBMatch = text.match(pHBLBRegex);
+
+    //CITOMETRIA LÍQUIDOS BIOLÓGICOS:
+    const CLBExistMatch = text.match(CLBExistRegex);
+    const materialCLBMatch = text.match(materialCLBRegex);
+    const corCLBMatch = text.match(corCLBRegex);
+    const aspectoCLBMatch = text.match(aspectoCLBRegex);
+    const leucocitosCLBMatch = text.match(leucocitosCLBRegex);
+    const linfocitosCLBMatch = text.match(linfocitosCLBRegex);
+    const neutrofilosCLBMatch = text.match(neutrofilosCLBRegex);
+    const monocitosCLBMatch = text.match(monocitosCLBRegex);
+    const eosinofilosCLBMatch = text.match(eosinofilosCLBRegex);
+    const hemaciasCLBMatch = text.match(hemaciasCLBRegex);
+    const OBSCLBMatch = text.match(OBSCLBRegex);
+    
+    //BAAR
+    const BAARExistMatch = text.match(BAARExistRegex);
+    const materialBAARMatch = text.match(materialBAARRegex);
+    const resultadoBAARMatch = text.match(resultadoBAARRegex);
+    
+    //GRAM
+    const GRAMExistMatch = text.match(GRAMExistRegex);
+    const materialGRAMMatch = text.match(materialGRAMRegex);
+    const resultadoGRAMMatch = text.match(resultadoGRAMRegex);
+
+    //CULTURA DE BACTERIAS AERÓBIAS
+    const CBAExistMatch = text.match(CBAExistRegex);
+    const materialCBAMatch = text.match(materialCBARegex);
+    const resultadoCBAMatch = text.match(resultadoCBARegex);
+    const OBSCBAMatch = text.match(OBSCBARegex);
+
+    //PESQUISA DE FUNGOS
+    const PFExistMatch = text.match(PFExistRegex);
+    const materialPFMatch = text.match(materialPFRegex);
+    const resultadoPFMatch = text.match(resultadoPFRegex);
+
+
     
     //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
@@ -561,6 +656,7 @@ function extractData(text) {
     document.getElementById('VDRL').textContent = VDRLMatch ? VDRLMatch[1].trim() : 'Não encontrado';
     document.getElementById('aIgGcTP').textContent = aIgGcTPMatch ? aIgGcTPMatch[1].trim() : 'Não encontrado';
     document.getElementById('daANTIHIV1e2').textContent = daANTIHIV1e2Match ? daANTIHIV1e2Match[1].trim() : 'Não encontrado';
+    document.getElementById('urocultura').textContent = uroculturaMatch ? uroculturaMatch[1].trim() : 'Não encontrado';
     
 
 
@@ -836,6 +932,98 @@ function extractData(text) {
         document.getElementById('eas').textContent = 'Não encontrado';
     }
 
+    // Exibição dos resultados dos HARDCASES
+    // BIOQUIMICA LÍQUIDOS BIOLÓGICOS:
+    if (BLBExistMatch) {
+      const materialBLB = materialBLBMatch ? (materialBLBMatch[1].trim() === "" ? "Nada consta" : materialBLBMatch[1].trim()) : 'Não encontrado';
+      const glicoseBLB = glicoseBLBMatch ? glicoseBLBMatch[1].trim() : 'Não encontrado';
+      const colesterolBLB = colesterolBLBMatch ? colesterolBLBMatch[1].trim() : 'Não encontrado';
+      const trigliceridesBLB = trigliceridesBLBMatch ? trigliceridesBLBMatch[1].trim() : 'Não encontrado';
+      const proteinatotaisBLB = proteinatotaisBLBMatch ? proteinatotaisBLBMatch[1].trim() : 'Não encontrado';
+      const albuminaBLB = albuminaBLBMatch ? albuminaBLBMatch[1].trim() : 'Não encontrado';
+      const amilaseBLB = amilaseBLBMatch ? amilaseBLBMatch[1].trim() : 'Não encontrado';
+      const DHLBLB = DHLBLBMatch ? DHLBLBMatch[1].trim() : 'Não encontrado';
+      const pHBLB = pHBLBMatch ? pHBLBMatch[1].trim() : 'Não encontrado';
+      
+      const BLBText = `Material: ${materialBLB}<br>Glicose: ${glicoseBLB}<br>Colesterol: ${colesterolBLB}<br>Triglicérides: ${trigliceridesBLB}<br>Proteína Totais: ${proteinatotaisBLB}<br>Albumina: ${albuminaBLB}<br>Amilase: ${amilaseBLB}<br>DHL: ${DHLBLB}<br>pH: ${pHBLB}`;
+
+        document.getElementById('BLB').innerHTML = BLBText;
+    } else {
+        document.getElementById('BLB').textContent = 'Não encontrado';
+    }
+    
+    // CITOMETRIA LÍQUIDOS BIOLÓGICOS:
+    if (CLBExistMatch) {
+      const materialCLB = materialCLBMatch ? (materialCLBMatch[1].trim() === "" ? "Nada consta" : materialCLBMatch[1].trim()) : 'Não encontrado';
+      const corCLB = corCLBMatch ? corCLBMatch[1].trim() : 'Não encontrado';
+      const aspectoCLB = aspectoCLBMatch ? aspectoCLBMatch[1].trim() : 'Não encontrado';
+      const leucocitosCLB = leucocitosCLBMatch ? leucocitosCLBMatch[1].trim() : 'Não encontrado';
+      const linfocitosCLB = linfocitosCLBMatch ? linfocitosCLBMatch[1].trim() : 'Não encontrado';
+      const neutrofilosCLB = neutrofilosCLBMatch ? neutrofilosCLBMatch[1].trim() : 'Não encontrado';
+      const monocitosCLB = monocitosCLBMatch ? monocitosCLBMatch[1].trim() : 'Não encontrado';
+      const eosinofilosCLB = eosinofilosCLBMatch ? eosinofilosCLBMatch[1].trim() : 'Não encontrado';
+      const hemaciasCLB = hemaciasCLBMatch ? hemaciasCLBMatch[1].trim() : 'Não encontrado';
+      let OBSCLB = OBSCLBMatch ? OBSCLBMatch[1].trim() : 'Não encontrado';
+        OBSCLB = OBSCLB.replace(/^s\s*/, '');
+      const CLBText = `Material: ${materialCLB}<br>Cor: ${corCLB}<br>Aspecto: ${aspectoCLB}<br>Leucócitos: ${leucocitosCLB}/mm³<br>Linfócitos: ${linfocitosCLB}%<br>Neutrófilos: ${neutrofilosCLB}%<br>Monócitos: ${monocitosCLB}%<br>Eosinófilos: ${eosinofilosCLB}%<br>Hemácias: ${hemaciasCLB}/mm³<br>OBS: ${OBSCLB}`;
+
+      document.getElementById('CLB').innerHTML = CLBText;
+    } else {
+        document.getElementById('CLB').textContent = 'Não encontrado';
+    }
+
+
+    // BAAR
+    if (BAARExistMatch) {
+      const materialBAAR = materialBAARMatch ? materialBAARMatch[1].trim() : 'Não encontrado';
+      const resultadoBAAR = resultadoBAARMatch ? resultadoBAARMatch[1].trim() : 'Não encontrado';
+
+      const BAARText = `Material: ${materialBAAR}<br>Resultado: ${resultadoBAAR}`;
+
+      document.getElementById('BAAR').innerHTML = BAARText;
+    } else {
+        document.getElementById('BAAR').textContent = 'Não encontrado';
+    }
+
+    // GRAM
+    if (GRAMExistMatch) {
+      const materialGRAM = materialGRAMMatch ? materialGRAMMatch[1].trim() : 'Não encontrado';
+      const resultadoGRAM = resultadoGRAMMatch ? resultadoGRAMMatch[1].trim() : 'Não encontrado';
+
+      const GRAMText = `Material: ${materialGRAM}<br>Resultado: ${resultadoGRAM}`;
+
+      document.getElementById('GRAM').innerHTML = GRAMText;
+    } else {
+        document.getElementById('GRAM').textContent = 'Não encontrado';
+    }
+  
+    //CULTURA DE BACTERIAS AERÓBIAS
+    if (CBAExistMatch) {
+      const materialCBA = materialCBAMatch ? materialCBAMatch[1].trim() : 'Não encontrado';
+      const resultadoCBA = resultadoCBAMatch ? resultadoCBAMatch[1].trim() : 'Não encontrado';
+      let OBSCBA = OBSCBAMatch ? OBSCBAMatch[1].trim() : 'Nada consta';
+      OBSCBA = OBSCBA.replace(/^s\s*/, '');
+      const CBAText = `Material: ${materialCBA}<br>Resultado: ${resultadoCBA}<br> OBS: ${OBSCBA}`;
+
+      document.getElementById('CBA').innerHTML = CBAText;
+    } else {
+        document.getElementById('CBA').textContent = 'Não encontrado';
+    }
+
+    //PESQUISA DE FUNGOS
+    if (PFExistMatch) {
+      const materialPF = materialPFMatch ? materialPFMatch[1].trim() : 'Não encontrado';
+      const resultadoPF = resultadoPFMatch ? resultadoPFMatch[1].trim() : 'Não encontrado';
+
+      const PFText = `Material: ${materialPF}<br>Resultado: ${resultadoPF}`;
+
+      document.getElementById('PF').innerHTML = PFText;
+    } else {
+        document.getElementById('PF').textContent = 'Não encontrado';
+    }
+
+    
+
 
 
 
@@ -966,7 +1154,8 @@ document.getElementById('process-pdf').addEventListener('click', async () => {
       "UREIA PÓS HEMODIÁLISE", "FERRO SERICO", "FOSFATASE ALCALINA", "ÍNDICE SAT. TRANSFERRINA", "PERFIL LIPIDICO (LIPIDOGRAMA)", "T4 LIVRE - TIROXINA",
       "TSH - HORMONIO TIREOESTIMULANTE", "VITAMINA D - 25 HIDROXI", "PTH INTACTO", "GAMA GGT", "LIPASE", "AMILASE", "VITAMINA B12", "FIBRINOGENIO",
       "Detecção de Anticorpo contra o vírus da hepatite C (anti-HCV)", "Detecção de Antígeno de Superfície do Vírus da Hepate B (HBS-Ag)", "VDRL", "ANTICORPO IgG CONTRA TREPONEMA PALLIDUM",
-      "DETECÇÃO DE ANTICORPOS ANTI-HIV 1 E 2", "CK-MB"
+      "DETECÇÃO DE ANTICORPOS ANTI-HIV 1 E 2", "CK-MB", "BIOQUIMICA LÍQUIDOS BIOLÓGICOS", "CITOMETRIA LÍQUIDOS BIOLÓGICOS", "BACILOSCOPIA (BAAR)", "BACTERIOSCOPIA (GRAM)",
+      "CULTURA DE BACTERIAS AERÓBIAS", "PESQUISA DE FUNGOS", "UROCULTURA",
 
     ];
     
