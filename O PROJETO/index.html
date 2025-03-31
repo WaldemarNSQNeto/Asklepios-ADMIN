@@ -9,35 +9,25 @@
 <body>
     
     <div id="patient-name-header" class="hidden">
-        <p><span id="patient-name"></span></p>
-    </div>     
+        <button id="scrollToTopButton" title="Ir para o topo">&#x23EB;</button>
+        <span id="patient-name"></span>&nbsp;-&nbsp;<span id="exam-date"></span>
+        <button id="scrollToBottomButton" title="Ir para o final">&#x23EC;</button>
+    </div>    
 
 
     <!--Segunda tela-->
     <div class="container">
         <h1>ExAsklépios: Extrator de Exames - HC/UFG &#x1F4DA;</h1>
         <div id="drop-area">
-            <p>Arraste e solte o arquivo PDF aqui ou</p>
+            <p>Arraste e solte o arquivo PDF aqui</p>
             <input type="file" id="pdfInput" accept=".pdf" hidden>
-            <label for="pdfInput" class="button">Escolha um arquivo</label>
+            <label for="pdfInput" class="button">Escolher outro documento</label>
         </div>
 
 
-    <!--Teste da tela sumário de resultados-->
-    <div id="sumario-resultados" class="hidden">
-        
+          
             
-    <h2>Sumário dos Resultados</h2>
-    <div class="resultado-container">
-        <div class="resultado-header">
-            <div class="botoes-resultado">
-                <button id="imprimirResultado" style="display: none;">Imprimir</button>
-                <button id="copiarResultado" style="display: none;">Copiar Resultados</button>
-            </div>
-        </div>
-        <div id="resultado" class="resultado"></div>
-    </div>
-    </div>
+    
 
 
 
@@ -49,18 +39,18 @@
         <div id="output"></div>
     </div>
     
-
-
-
+    <div id="dados-gerais" class="hidden">
+        <h2>&#x1F4D6;	Dados Gerais:</h2>
+        <p><strong>PCT:</strong> <span id="pct"></span></p>
+        <p><strong>Sexo:</strong> <span id="sexo"></span></p>
+        <p><strong>Idade:</strong> <span id="idade"></span></p>
+        <p><strong>Data do Exame:</strong> <span id="dataExame"></span></p>
+    </div>
 
 
     <!--Texto corrido com os valores e referenciais-->
         <div id="results" class="hidden">
             <h2>&#129656; Exames Clássicos:</h2>
-            <p><strong>PCT:</strong> <span id="pct"></span></p>
-            <p><strong>Sexo:</strong> <span id="sexo"></span></p>
-            <p><strong>Idade:</strong> <span id="idade"></span></p>
-            <p><strong>Data do Exame:</strong> <span id="dataExame"></span></p>
             <p><strong>Hb:</strong> <span id="hb" title="VR: &#10 ♂: 13,0 - 17,0 g/dL &#10 ♀: 12,0 - 15,0 g/dL"></span></p>
             <p><strong>Ht:</strong> <span id="ht" title="VR: &#10 ♂: 40 - 50 % &#10 ♀: 36,0 - 45,0 %"></span></p>
             <p><strong>VCM:</strong> <span id="vcm" title="VR: 83 - 101 fL"></span></p>
@@ -90,10 +80,10 @@
             <p><strong>Na:</strong> <span id="sodio" title="VR: 136 - 145 mEq/L"></span></p>
             <p><strong>K:</strong> <span id="potassio" title="VR: 3,5 - 5,1 mEq/L"></span></p>
             <p><strong>Mg:</strong> <span id="magnesio" title="VR: 1,6 - 2,6 mg/dL"></span></p>
-            <p><strong>Ca Total:</strong> <span id="calcioTotal" title="VR: &#10 Cordão Umbilical: 8,2 - 11,2 mg/dL &#10 Prematuro: 6,2 - 11,0 mg/dL &#10 0 a 10 dias: 7,6 - 10,4 mg/dL&#10 10 dias a 24 meses: 9,0 - 11,0 mg/dL&#10 Crianças de 2 a 12 anos: 8,8 - 10,2 mg/dL&#10 Adulto: 8,4 - 10,2 mg/dL"></span></p>
+            <p><strong>Ca Total (checar VR p/ cordão umbilical e prematuros no pop-up):</strong> <span id="calcioTotal" title="VR: &#10 Cordão Umbilical: 8,2 - 11,2 mg/dL &#10 Prematuro: 6,2 - 11,0 mg/dL &#10 0 a 10 dias: 7,6 - 10,4 mg/dL&#10 10 dias a 24 meses: 9,0 - 11,0 mg/dL&#10 Crianças de 2 a 12 anos: 8,8 - 10,2 mg/dL&#10 Adulto: 8,4 - 10,2 mg/dL"></span></p>
             <p><strong>P:</strong> <span id="fosforo" title="VR:&#10Adultos: 2,3 - 4,7 mg/dL&#10Crianças: 4,0 - 7,0 mg/dL"></span></p>
             <p><strong>Cl:</strong> <span id="cloro" title="VR: 98 - 107 mEq/L"></span></p>
-            <p><strong>Glicemia:</strong> <span id="glicemia" title="VR: &#10 Jejum: 70 - 99 mg/dL &#10 Casual: < 200 mg/dL"></span></p>
+            <p><strong>Glicemia (se casual, checar VR no pop-up):</strong> <span id="glicemia" title="VR: &#10 Jejum: 70 - 99 mg/dL &#10 Casual: < 200 mg/dL"></span></p>
             <p><strong>TGO/AST:</strong> <span id="tgoAst" title="VR: 5 - 34 U/L"></span></p>
             <p><strong>TGP/ALT:</strong> <span id="tgp" title="VR: < 55 U/L"></span></p>
             <p><strong>PCR:</strong> <span id="pcr" title="VR: < 0,5 g/dL"></span></p>
@@ -103,13 +93,42 @@
             <p><strong>GASOMETRIA VENOSA:</strong> <span id="gasometriaVenosa" title="VR:&#10 FIO2: correlacionar c/ a clínica &#10 pH: 7,350 - 7,450 &#10 pCO2: 35,0 - 45,0 mmHg &#10 pO2: 83,0 - 108 mmHg &#10 HCO3: 21,0 - 28,0 mmol/L &#10 BE (B): -2 a +3 mmol/L &#10 SatO2: 95 a 98% &#10 Lac: 0 a 2,20 mmol/L"></span></p>
             <p><strong>EAS:</strong> <span id="eas" title="VR:&#10 Cor: Amarelo Citrino &#10 Aspecto: Límpido &#10 pH: 5,0 a 7,0 &#10 Densidade: 1.010 a 1.030 &#10 Proteínas: Ausentes &#10 Glicose: Ausente &#10 Cetona: Ausentes &#10 Bilirrubina: Ausente &#10 Sangue: Ausente &#10 Urobilinogênio: Normal &#10 Nitrito: Negativo &#10 Ácido Ascórbico: Ausente &#10 Esterase Leucocitária: Negativo &#10 Células epiteliais: Ausente &#10 Leucócitos / Piócitos: < ou = a 10.000/mL &#10 Hemácias: < ou = a 8.000/mL &#10 Cilindros: Ausente &#10 Cristais: Ausente &#10 Filamentos de Muco: Ausente"></span></p>
             
+            </div>
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+            <script src="script.js"></script>
+
+
+        <div id="results-especificos" class="hidden">
+            <h2>&#x1F575;&#xFE0F; Exames Específicos:</h2>
+            <p><strong>Lipidograma:</strong> <span id="perfillipidico" title="VR: &#10 Colesterol Total: <200 mg/dL &#10 HDL: ♂ > 45 mg/dL / ♀ > 40 mg/dL &#10 LDL: < 130 mg/dL &#10 VLDL: < 40 mg/dL &#10 Triglicerides: < 150 mg/dL &#10 Índice de Castelli I: < 4,4 &#10 Índice de Castelli I: < 3,2"></span></p>
             <p><strong>CPK:</strong> <span id="CPK" title="VR:&#10 ♂: 30-200 U/L &#10 ♀: 29-168U/L"></span></p>
             <p><strong>D-DÍMERO:</strong> <span id="ddimero" title="VR: < 0,5 mg/L"></span></p>
+            <p><strong>CK-MB:</strong> <span id="CKMB" title="VR: < 25 U/L"></span></p>
+            <p><strong>NT-proBNP:</strong> <span id="NTproBNP" title="VR: ≤ 74 anos: < 125 pg/ml &#10 ≥ 75 anos: < 450 pg/ml"></span></p>
             <p><strong>DHL ou LDH:</strong> <span id="LDH" title="VR: 125 - 243 U/L"></span></p>
             <p><strong>Ferritina:</strong> <span id="ferritina" title="VR:&#10 ♂: 21,81 - 274,6 ng/mL &#10 ♀: 4,63 - 204,0 ng/mL"></span></p>
             <p><strong>Ferro Sérico:</strong> <span id="ferroserico" title="VR: &#10 ♂: 31 - 144 ug /dL &#10 ♀: 25 - 156 ug /dL"></span></p>
             <p><strong>PROTEÍNA TOTAL E FRAÇÕES:</strong> <span id="proteinatotalfracoes" title="VR:&#10 Proteínas Totais: 6,1 - 7,9 g/dL &#10 Albumina: 3,5 - 4,7 g/dL &#10 Globulinas: 1,5 - 3,0 g/dL &#10 Relação ALB/GLOB: 1.0 - 2,0 g/dL"></span></p>
             <p><strong>TROPONINA "I":</strong> <span id="troponinai" title="VR: Até 0,04 ng/mL"></span></p>
+            <p><strong>UREIA PÓS HEMODIÁLISE:</strong> <span id="uph" title="VR: 10 - 50 mg/dL"></span></p>
+            <p><strong>FA:</strong> <span id="FA" title="VR: &#10 Adultos: 40 - 150 U/L &#10 Crianças (1 a 12 anos): < 500 U/L &#10 Crianças (12 a 15 anos): < 750 U/L"></span></p>
+            <p><strong>Índice de Sat. Transferrina:</strong> <span id="ist" title="VR: 20% - 50 %"></span></p>
+            <p><strong>T4 Livre:</strong> <span id="T4" title="VR: 0,70 - 1,48 ng/dL"></span></p>
+            <p><strong>TSH (checar VR p/ GESTANTES no pop-up):</strong> <span id="TSH" title="VR: 0,35 - 4,94 uIU/mL &#10 Inferior a um mês: 0,51 - 11,30 uIU/mL &#10 De 1 mês a 11 anos: 0,79 - 5,85 uIU/mL &#10 &#10 Gestantes: &#10  1º trimestre: 0,05 - 3,70 uIU/mL &#10  2º trimestre: 0,31 - 4,35 uIU/mL &#10  3º trimestre: 0,41 - 5,18 uIU/mL"></span></p>
+            <p><strong>Vitamina D - 25-HIDROXI:</strong> <span id="vitaminaD" title="VR: > 20 ng/mL"></span></p>
+            <p><strong>Vitamina B12:</strong> <span id="vitB12" title="VR: 187 - 883 pg/mL"></span></p>
+            <p><strong>PTH Intacto:</strong> <span id="PTHintacto" title="VR: 15,0 - 68,3 pg/mL"></span></p>
+            
+            <p><strong>Ritmo de Cortisol:</strong> <span id="RC" title="VR: 3,7 - 19,4 μg/dL- 8Hs"></span></p>
+            
+            <p><strong>GAMA GGT:</strong> <span id="gamaGGT" title="VR: &#10 ♂: 12 - 64 U/L &#10 ♀: 9 - 36 U/L"></span></p>
+            <p><strong>Lipase:</strong> <span id="lipase" title="VR: 8 - 78 U/L"></span></p>
+            <p><strong>Amilase:</strong> <span id="amilase" title="VR: &#10 Recém Nascido: 5 - 65 U/L  &#10 Adulto: 25 - 125 U/L &#10 >70 anos: 20 - 160 U/L"></span></p>
+            <p><strong>Fibrinogênio:</strong> <span id="fibrinogenio" title="VR: 180 - 350 mg/dL"></span></p>
+            
+            
+            <p><strong>Resultado de Antígenos do SARS-CoV-2:</strong> <span id="RASARSCoV2" title="VR: NÃO REAGENTE"></span></p>
             <p><strong>ANTI-HBc IgM (HEPATITE B):</strong> <span id="antihbcigm" title="VR: &#10 S/CO < 0,90: Não Reagente &#10 S/CO 0,90 - 0,99: Zona Cinza &#10 S/CO ≥ 1,00: Reagente"></span></p>
             <p><strong>ANTI-HBc TOTAL (HEPATITE B):</strong> <span id="antihbctotal" title="VR: &#10 S/CO < 0,90: Não Reagente &#10 S/CO 0,90 - 0,99: Zona Cinza &#10 S/CO ≥ 1,00: Reagente"></span></p>
             <p><strong>ANTI-HBS (HEPATITE B):</strong> <span id="antihbs" title="VR: &#10 < 10 mUI/mL: Não Reagente &#10 > 10 mUI/mL - Reagente"></span></p>    
@@ -124,23 +143,7 @@
             <p><strong>IGA:</strong> <span id="IGA" title="VR: 63 - 484 mg/dL"></span></p>
             <p><strong>IGM:</strong> <span id="IGM" title="VR: 25 - 293 mg/dL"></span></p>
             <p><strong>IGG:</strong> <span id="IGG" title="VR: 320 - 1.822/dL"></span></p>
-
-            <p><strong>UREIA PÓS HEMODIÁLISE:</strong> <span id="uph" title="VR: 10 - 50 mg/dL"></span></p>
-            <p><strong>FA:</strong> <span id="FA" title="VR: &#10 Adultos: 40 - 150 U/L &#10 Crianças (1 a 12 anos): < 500 U/L &#10 Crianças (12 a 15 anos): < 750 U/L"></span></p>
-            <p><strong>Índice de Sat. Transferrina:</strong> <span id="ist" title="VR: 20% - 50 %"></span></p>
-            <p><strong>Lipidograma:</strong> <span id="perfillipidico" title="VR: &#10 Colesterol Total: <200 mg/dL &#10 HDL: ♂ > 45 mg/dL / ♀ > 40 mg/dL &#10 LDL: < 130 mg/dL &#10 VLDL: < 40 mg/dL &#10 Triglicerides: < 150 mg/dL &#10 Índice de Castelli I: < 4,4 &#10 Índice de Castelli I: < 3,2"></span></p>
-            <p><strong>T4 Livre:</strong> <span id="T4" title="VR: 0,70 - 1,48 ng/dL"></span></p>
-            <p><strong>TSH (checar VR p/ GESTANTES no pop-up):</strong> <span id="TSH" title="VR: 0,35 - 4,94 uIU/mL &#10 Inferior a um mês: 0,51 - 11,30 uIU/mL &#10 De 1 mês a 11 anos: 0,79 - 5,85 uIU/mL &#10 &#10 Gestantes: &#10  1º trimestre: 0,05 - 3,70 uIU/mL &#10  2º trimestre: 0,31 - 4,35 uIU/mL &#10  3º trimestre: 0,41 - 5,18 uIU/mL"></span></p>
-            <p><strong>Vitamina D - 25-HIDROXI:</strong> <span id="vitaminaD" title="VR: > 20 ng/mL"></span></p>
-            <p><strong>PTH Intacto:</strong> <span id="PTHintacto" title="VR: 15,0 - 68,3 pg/mL"></span></p>
-            <p><strong>GAMA GGT:</strong> <span id="gamaGGT" title="VR: &#10 ♂: 12 - 64 U/L &#10 ♀: 9 - 36 U/L"></span></p>
-            <p><strong>Lipase:</strong> <span id="lipase" title="VR: 8 - 78 U/L"></span></p>
-            <p><strong>Amilase:</strong> <span id="amilase" title="VR: &#10 Recém Nascido: 5 - 65 U/L  &#10 Adulto: 25 - 125 U/L &#10 >70 anos: 20 - 160 U/L"></span></p>
-            <p><strong>Vitamina B12:</strong> <span id="vitB12" title="VR: 187 - 883 pg/mL"></span></p>
-            <p><strong>Fibrinogênio:</strong> <span id="fibrinogenio" title="VR: 180 - 350 mg/dL"></span></p>
-            <p><strong>CK-MB:</strong> <span id="CKMB" title="VR: < 25 U/L"></span></p>
-            
-            <!--HARDCASES-->
+            <p><strong>Fator Reumatoide:</strong> <span id="fatorreumatoide" title="VR: < 30 UI/mL"></span></p>
             <p><strong>BIOQUÍMICA DE LÍQUIDOS BIOLÓGICOS:</strong> <span id="BLB"></span></p>
             <p><strong>CITOMETRIA DE LÍQUIDOS BIOLÓGICOS:</strong> <span id="CLB"></span></p>
             <p><strong>BACILOSCOPIA (BAAR):</strong> <span id="BAAR" title="Escala semi-quantitativa por campo:&#10 (-) Não foram encontrados BAAR em 100 campos observados&#10 (+) Presença de menos de  1 BAAR por campo em 100 campos observados&#10 (++) Presença de 1 a 10 BAAR por campo em 50 campos observados&#10 (+++) Presença de mais de 10 BAAR por campo em 20 campos observados"></span></p>
@@ -151,17 +154,26 @@
             <p><strong>CULTURA MICOBACTÉRIAS:</strong> <span id="CM" title="VR: NEGATIVO"></span></p>
             <p><strong>UROCULTURA:</strong> <span id="urocultura" title="VR: NEGATIVO"></span></p>
             <p><strong>HEMOCULTURA (AERÓBIOS E LEVEDURAS):</strong> <span id="hemocultura" title="VR: NEGATIVO"></span></p>
+        
+        </div>
+
+        <button id="gerarResultadoButton" class="button">Gerar Resultado</button>
+
+        <div id="sintese-resultados" class="hidden">
+            <h2>📝 Síntese dos Resultados:</h2>
+            <div id="sintese-output"></div>
+        </div>
 
 
+        <!-- Nova div para o texto completo do PDF -->
+        <div id="full-text-container" class="hidden">
+                <label for="fullTextOutput">Texto bruto extraído do PDF enviado:</label>
+                <p id="fullTextOutput"></p>
+        </div>
 
-            
-            <label for="fullTextOutput">Texto Completo do PDF:</label>
-            <p id="fullTextOutput"></p>
-            </div>
-            
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
-            <script src="script.js"></script>
-        <button id="resetButton">Escolher Novo Documento</button>
+            <button id="resetButton">Escolher Novo Documento</button>
+
+
 
         <!--SUPORTE WHATSAPP-->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
