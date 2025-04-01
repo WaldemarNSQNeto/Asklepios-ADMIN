@@ -460,34 +460,46 @@ input[type="file"] {
  
 
 
-/* Estilos para Dados Gerais (mesma formatação de Exames Clássicos) */
-#dados-gerais {
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
+/* Estilos para a seção de resultados (id="results") */
+#results, #dados-gerais {
+    text-align: left;
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
 }
 
-#dados-gerais h2 {
-    margin-top: 0;
+#results p, #dados-gerais p {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 4px;
+    display: block; /* Changed to block */
+    overflow: hidden; /* Added overflow: hidden */
 }
 
-#dados-gerais p {
-    margin-bottom: 5px; /* Ajusta o espaçamento entre os itens */
-    line-height: 1.5; /* Melhora a legibilidade */
+/* Estilo para linhas ÍMPARES */
+#results p:nth-child(odd), #dados-gerais p:nth-child(odd) {
+    background-color: #ffffff;
 }
 
-#dados-gerais strong {
-    float: left; /* Alinha o rótulo à esquerda */
-    clear: left; /* Garante que cada rótulo comece em uma nova linha */
-    width: 150px; /* Define uma largura para os rótulos */
-    text-align: left; /* Alinha o texto do rótulo à esquerda */
-    font-weight: bold; /* Deixa o rótulo em negrito */
+/* Estilo para linhas PARES */
+#results p:nth-child(even), #dados-gerais p:nth-child(even) {
+    background-color: #f8f9fa;
 }
 
-#dados-gerais span {
-    margin-left: 10px; /* Espaçamento entre o rótulo e o valor */
-    display: block; /* Faz com que o valor ocupe a linha inteira */
-    overflow-wrap: break-word; /* Quebra palavras longas */
-    text-align: left; /* Alinha o texto do valor à esquerda */
+#results strong, #dados-gerais strong {
+    font-weight: 600;
+    color: #495057;
+    float: left; /* Changed to float: left */
+    width: 250px; /* Back to fixed width */
+    box-sizing: border-box; /* Added box-sizing */
+}
+
+#results span, #dados-gerais span {
+    font-weight: 400;
+    color: #343a40;
+    display: block; /* Added display: block */
+    margin-left: 250px; /*compensates the width of the strong */
+    box-sizing: border-box; /* Added box-sizing */
+
 }
