@@ -40,7 +40,7 @@
     </div>
     
     <div id="dados-gerais" class="hidden">
-        <h2>&#x1F4D6;	Dados do Paciente:</h2>
+        <h2>&#x1F4D6;	Dados Gerais:</h2>
         <p><strong>PCT:</strong> <span id="pct"></span></p>
         <p><strong>Sexo:</strong> <span id="sexo"></span></p>
         <p><strong>Idade:</strong> <span id="idade"></span></p>
@@ -157,10 +157,12 @@
         
         </div>
 
-        <button id="gerarSinteseButton" class="button">Gerar Síntese</button>
-        <div id="sintese-resultados" class="hidden"></div>
+        <button id="gerarResultadoButton" class="button">Gerar Resultado</button>
 
-
+        <div id="sintese-resultados" class="hidden">
+            <h2>📝 Síntese dos Resultados:</h2>
+            <div id="sintese-output"></div>
+        </div>
 
 
         <!-- Nova div para o texto completo do PDF -->
