@@ -19,10 +19,27 @@ document.getElementById('scrollToTopButton').addEventListener('click', function(
 });
 
 document.getElementById('scrollToBottomButton').addEventListener('click', function() {
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    const gerarSinteseButton = document.getElementById('gerarSinteseButton');
+    if (gerarSinteseButton) {
+        const buttonRect = gerarSinteseButton.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const buttonTop = buttonRect.top + scrollTop;
+        const offset = 100; // Ajuste este valor se precisar de mais ou menos espaço acima do botão
+        window.scrollTo({ top: buttonTop - offset, behavior: 'smooth' });
+    }
 });
 
-document.getElementById('patient-name-header').classList.add('hidden');
+document.addEventListener('DOMContentLoaded', function() {
+    const generateSinteseButton = document.getElementById('generateSínteseButton');
+    const gerarSinteseButton = document.getElementById('gerarSinteseButton');
+
+    if (generateSinteseButton && gerarSinteseButton) {
+        generateSinteseButton.addEventListener('click', function() {
+            gerarSinteseButton.click(); // Simula um clique no botão "Gerar Síntese"
+        });
+    }
+});
+
 
 
 // Adiciona a classe 'highlight' quando o arquivo está sendo arrastado sobre a área
@@ -84,11 +101,9 @@ function handleFile(file) {
 
 
 
-
-
-
 let fullTextFromPDF = ''; // Variável global para armazenar o texto completo
 
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 async function analyzePDF(pdfData) {
     const pdfjsLib = window['pdfjs-dist/build/pdf'];
@@ -127,14 +142,14 @@ async function analyzePDF(pdfData) {
                 document.getElementById('new-results').classList.remove('hidden');
 
         // Adicionar botão "Copiar"
-    const copyButton = document.createElement('button');
-    copyButton.innerText = 'Copiar';
-    copyButton.style.backgroundColor = 'green';
-    copyButton.style.color = 'white';
-    copyButton.style.padding = '10px';
-    copyButton.style.border = 'none';
-    copyButton.style.cursor = 'pointer';
-    copyButton.style.marginTop = '20px';
+        const copyButton = document.createElement('button');
+        copyButton.innerText = 'Copiar';
+        copyButton.style.backgroundColor = 'green';
+        copyButton.style.color = 'white';
+        copyButton.style.padding = '10px';
+        copyButton.style.border = 'none';
+        copyButton.style.cursor = 'pointer';
+        copyButton.style.marginTop = '20px';
 
     // Função para copiar os resultados
     copyButton.onclick = () => {
@@ -165,6 +180,7 @@ async function analyzePDF(pdfData) {
 
         // Agora, chame a função para extrair os dados antigos
         extractData(fullTextFromPDF);
+    
 
     } catch (error) {
         console.error('Erro ao carregar o PDF:', error);
@@ -1787,6 +1803,16 @@ document.getElementById('results-especificos').classList.remove('hidden'); // Ad
 // Exibe o texto completo do PDF
 document.getElementById('fullTextOutput').textContent = fullTextFromPDF;
 
+// Adiciona um evento de clique ao botão "Gerar Síntese"
+document.getElementById('gerarSinteseButton').addEventListener('click', function() {
+    console.log("Botão 'Gerar Síntese' clicado!"); // Adicionado
+    const sinteseDiv = document.getElementById('sintese-resultados');
+    sinteseDiv.classList.remove('hidden'); // Remove a classe 'hidden' para mostrar a div
+    sinteseDiv.innerHTML = ''; // Limpa o conteúdo anterior
+    
+    // Chama a função para gerar a síntese
+    gerarSintese();
+});
 }
 
 // Função para resetar o formulário
@@ -1860,7 +1886,19 @@ document.addEventListener('DOMContentLoaded', function () {
             location.reload(); // Recarrega a página
         });
     }
+
+    // Adiciona um evento de clique ao botão "Gerar Síntese"
+    document.getElementById('gerarSinteseButton').addEventListener('click', function() {
+        console.log("Botão 'Gerar Síntese' clicado!"); // Adicionado
+        const sinteseDiv = document.getElementById('sintese-resultados');
+        sinteseDiv.classList.remove('hidden'); // Remove a classe 'hidden' para mostrar a div
+        sinteseDiv.innerHTML = ''; // Limpa o conteúdo anterior
+        
+        // Chama a função para gerar a síntese
+        gerarSintese();
+    });
 });
+
 
 
 
@@ -3614,3 +3652,685 @@ function interpretarRC(valor) {
     }
 }
 
+
+
+
+
+
+function gerarSintese() {
+    console.log("Função 'gerarSintese' chamada!"); // Adicionado
+    const sinteseDiv = document.getElementById('sintese-resultados');
+    let sinteseHTML = '';
+
+    
+    // Obtém a data do exame
+    const dataExameElement = document.getElementById('dataExame');
+    const dataExame = dataExameElement ? dataExameElement.textContent : 'Data não encontrada';
+
+    // Adiciona o cabeçalho "LABS (data):" ao início da síntese
+    sinteseHTML += `> LABS (${dataExame}): `;
+    
+
+    // Função auxiliar para adicionar exames condicionalmente
+    function adicionarExame(nomeExame, valor, formatacao) {
+        if (valor !== 'Não encontrado') {
+            // Substituir os emojis pelos caracteres desejados
+            formatacao = formatacao.replace(/\u23EB/g, '↑*').replace(/\uD83C\uDD97/g, '').replace(/\u23EC/g, '↓*');
+            sinteseHTML += formatacao;
+        }
+    }
+
+    //HEMOGRAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    // Captura e formata os dados do Hemograma
+    const hbElement = document.getElementById('hb');
+    const hb = hbElement ? hbElement.textContent : 'Não encontrado';
+    const htElement = document.getElementById('ht');
+    const ht = htElement ? htElement.textContent : 'Não encontrado';
+    const vcmElement = document.getElementById('vcm');
+    const vcm = vcmElement ? vcmElement.textContent : 'Não encontrado';
+    const hcmElement = document.getElementById('hcm');
+    const hcm = hcmElement ? hcmElement.textContent : 'Não encontrado';
+    const chcmElement = document.getElementById('chcm');
+    const chcm = chcmElement ? chcmElement.textContent : 'Não encontrado';
+    const rdwElement = document.getElementById('rdw');
+    const rdw = rdwElement ? rdwElement.textContent : 'Não encontrado';
+    const leucocitosTotaisElement = document.getElementById('leucocitosTotais');
+    const leucocitosTotais = leucocitosTotaisElement ? leucocitosTotaisElement.textContent : 'Não encontrado';
+    const promielocitosElement = document.getElementById('promielocitos');
+    const promielocitos = promielocitosElement ? promielocitosElement.textContent : 'Não encontrado';
+    const mielocitosElement = document.getElementById('mielocitos');
+    const mielocitos = mielocitosElement ? mielocitosElement.textContent : 'Não encontrado';
+    const metamielocitosElement = document.getElementById('metamielocitos');
+    const metamielocitos = metamielocitosElement ? metamielocitosElement.textContent : 'Não encontrado';
+    const bastoesElement = document.getElementById('bastoes');
+    const bastoes = bastoesElement ? bastoesElement.textContent : 'Não encontrado';
+    const segmentadosElement = document.getElementById('segmentados');
+    const segmentados = segmentadosElement ? segmentadosElement.textContent : 'Não encontrado';
+    const eosinofilosElement = document.getElementById('eosinofilos');
+    const eosinofilos = eosinofilosElement ? eosinofilosElement.textContent : 'Não encontrado';
+    const basofilosElement = document.getElementById('basofilos');
+    const basofilos = basofilosElement ? basofilosElement.textContent : 'Não encontrado';
+    const linfocitosElement = document.getElementById('linfocitos');
+    const linfocitos = linfocitosElement ? linfocitosElement.textContent : 'Não encontrado';
+    const linfocitosAtipicosElement = document.getElementById('linfocitosAtipicos');
+    const linfocitosAtipicos = linfocitosAtipicosElement ? linfocitosAtipicosElement.textContent : 'Não encontrado';
+    const monocitosElement = document.getElementById('monocitos');
+    const monocitos = monocitosElement ? monocitosElement.textContent : 'Não encontrado';
+    const blastosElement = document.getElementById('blastos');
+    const blastos = blastosElement ? blastosElement.textContent : 'Não encontrado';
+    const plasmocitosElement = document.getElementById('plasmocitos');
+    const plasmocitos = plasmocitosElement ? plasmocitosElement.textContent : 'Não encontrado';
+    const plaquetasElement = document.getElementById('plaquetas');
+    const plaquetas = plaquetasElement ? plaquetasElement.textContent : 'Não encontrado';
+    const hematoscopiaElement = document.getElementById('hematoscopia');
+    const hematoscopia = hematoscopiaElement ? hematoscopiaElement.textContent.trim() : 'Não encontrado';
+
+    // Ajusta a string de acordo com o valor de hematoscopia
+    let hematoscopiaString = "";
+    if (hematoscopia !== "Nada consta") {
+        hematoscopiaString = ` / ${hematoscopia} //`;
+    } else {
+        hematoscopiaString = " //";
+    }
+
+    // Formata os dados do Hemograma
+    const hemogramaFormatado = `Hb ${hb} / Ht ${ht} / VCM ${vcm} / HCM ${hcm} / CHCM ${chcm} / RDW ${rdw} / LEUCO TOTAL ${leucocitosTotais} (PROMIELO ${promielocitos} - MIELO ${mielocitos} - METAMIELO ${metamielocitos} - BAST ${bastoes} - SEGM ${segmentados} - EOSI ${eosinofilos} - BASO ${basofilos} - LINFO ${linfocitos} - LINFO ATPC ${linfocitosAtipicos} - MONO ${monocitos} - BLASTO ${blastos} - PLASMO ${plasmocitos}) / PLAQ ${plaquetas}${hematoscopiaString}`;
+    adicionarExame('hemograma', hb, hemogramaFormatado);
+
+    //TAP
+    // Captura e formata os dados da TAP
+    const tempoProtrombinaElement = document.getElementById('tempoProtrombina');
+    const tempoProtrombina = tempoProtrombinaElement ? tempoProtrombinaElement.textContent : 'Não encontrado';
+    const atividadeProtrombinaElement = document.getElementById('atividadeProtrombina');
+    const atividadeProtrombina = atividadeProtrombinaElement ? atividadeProtrombinaElement.textContent : 'Não encontrado';
+    const inrElement = document.getElementById('inr');
+    const inr = inrElement ? inrElement.textContent : 'Não encontrado';
+    // Formata os dados da TAP
+    const coagulacaoFormatada = `<b></b> TAP ${tempoProtrombina} - ${atividadeProtrombina}% - INR ${inr} //`;
+    adicionarExame('coagulacao', tempoProtrombina, coagulacaoFormatada);
+
+
+    //GLICEMIA
+    const glicemiaElement = document.getElementById('glicemia');
+    const glicemia = glicemiaElement ? glicemiaElement.textContent : 'Não encontrado';
+    // Formata os dados da glicemia
+    const glicemiaaFormatada = `<b></b> GLICEMIA ${glicemia} //`;
+    adicionarExame('glicemia', glicemia, glicemiaaFormatada);
+
+    //UREIA
+    const ureiaElement = document.getElementById('ureia');
+    const ureia = ureiaElement ? ureiaElement.textContent : 'Não encontrado';
+    // Formata os dados da Ureia
+    const ureiaFormatada = ` UR ${ureia} //`;
+    adicionarExame('ureia', ureia, ureiaFormatada);
+
+    //CREATININA
+    const creatininaElement = document.getElementById('creatinina');
+    const creatinina = creatininaElement ? creatininaElement.textContent : 'Não encontrado';
+    // Formata os dados da Creatinina
+    const creatininaFormatada = ` CR ${creatinina} //`;
+    adicionarExame('creatinina', creatinina, creatininaFormatada);
+
+    //SÓDIO
+    const sodioElement = document.getElementById('sodio');
+    const sodio = sodioElement ? sodioElement.textContent : 'Não encontrado';
+    // Formata os dados do Sódio
+    const sodioFormatada = ` Na ${sodio} //`;
+    adicionarExame('sodio', sodio, sodioFormatada);
+
+    //POTÁSSIO
+    const potassioElement = document.getElementById('potassio');
+    const potassio = potassioElement ? potassioElement.textContent : 'Não encontrado';
+    // Formata os dados do Potássio
+    const potassioFormatada = ` K ${potassio} //`;
+    adicionarExame('potassio', potassio, potassioFormatada);
+
+    //MAGNÉSIO
+    const magnesioElement = document.getElementById('magnesio');
+    const magnesio = magnesioElement ? magnesioElement.textContent : 'Não encontrado';
+    // Formata os dados do Magnésio
+    const magnesioFormatada = ` Mg ${magnesio} //`;
+    adicionarExame('magnesio', magnesio, magnesioFormatada);
+
+    //CÁLCIO TOTAL
+    const calcioTotalElement = document.getElementById('calcioTotal');
+    const calcioTotal = calcioTotalElement ? calcioTotalElement.textContent : 'Não encontrado';
+    // Formata os dados do Cálcio Total
+    const calcioTotalFormatada = ` CaT ${calcioTotal} //`;
+    adicionarExame('calcioTotal', calcioTotal, calcioTotalFormatada);
+
+    //FÓSFORO
+    const fosforoElement = document.getElementById('fosforo');
+    const fosforo = fosforoElement ? fosforoElement.textContent : 'Não encontrado';
+    // Formata os dados do Fósforo
+    const fosforoFormatada = ` P ${fosforo} //`;
+    adicionarExame('fosforo', fosforo, fosforoFormatada);
+
+    //CLORO
+    const cloroElement = document.getElementById('cloro');
+    const cloro = cloroElement ? cloroElement.textContent : 'Não encontrado';
+    // Formata os dados do Cloro
+    const cloroFormatada = ` Cl ${cloro} //>`;
+    adicionarExame('cloro', cloro, cloroFormatada);
+
+    //TGO/AST
+    const tgoAstElement = document.getElementById('tgoAst');
+    const tgoAst = tgoAstElement ? tgoAstElement.textContent : 'Não encontrado';
+    // Formata os dados do TGO/AST
+    const tgoAstFormatada = ` TGO ${tgoAst} /`;
+    adicionarExame('tgoAst', tgoAst, tgoAstFormatada);
+
+    //TGP/ALT
+    const tgpElement = document.getElementById('tgp');
+    const tgp = tgpElement ? tgpElement.textContent : 'Não encontrado';
+    // Formata os dados do TGP/ALT
+    const tgpFormatada = ` TGP ${tgp} //`;
+    adicionarExame('tgp', tgp, tgpFormatada);
+
+    //Bilirrubina
+    const bilirrubinaElement = document.getElementById('bilirrubina');
+    const bilirrubina = bilirrubinaElement ? bilirrubinaElement.textContent : 'Não encontrado';
+    // Formata os dados da Bilirrubina
+    const bilirrubinaFormatada = ` BT/BD/BI = ${bilirrubina} //`;
+    adicionarExame('bilirrubina', bilirrubina, bilirrubinaFormatada);
+    
+    //PCR
+    const pcrElement = document.getElementById('pcr');
+    const pcr = pcrElement ? pcrElement.textContent : 'Não encontrado';
+    // Formata os dados do PCR
+    const pcrFormatada = ` PCR ${pcr} //`;
+    adicionarExame('pcr', pcr, pcrFormatada);
+ 
+    // Captura e formata os dados da TTPA
+    const ttpaRatioElement = document.getElementById('ttpaRatio');
+    const ttpaRatio = ttpaRatioElement ? ttpaRatioElement.textContent : 'Não encontrado';
+    // Formata os dados da TTPA
+    const TTPAFormatada = ` TTPA/RATIO ${ttpaRatio} //<br>`;
+    adicionarExame('TTPA', tempoProtrombina, TTPAFormatada);
+
+
+    
+
+    // Captura e formata os dados do EAS
+    const easElement = document.getElementById('eas');
+    const eas = easElement ? easElement.innerHTML : 'Não encontrado';
+
+    // Formata os dados do EAS
+    const easFormatado = `<b>EAS:</b> [${eas}]<br>`;
+    adicionarExame('eas', eas, easFormatado);
+
+    // Captura e formata os dados do Lipidograma
+    const perfillipidicoElement = document.getElementById('perfillipidico');
+    const perfillipidico = perfillipidicoElement ? perfillipidicoElement.innerHTML : 'Não encontrado';
+
+    // Formata os dados do Lipidograma
+    const perfillipidicoFormatado = `<b>PERFIL LIPÍDICO:</b> [${perfillipidico}]<br>`;
+    adicionarExame('perfillipidico', perfillipidico, perfillipidicoFormatado);
+
+
+
+    //CPK
+    const CPKElement = document.getElementById('CPK');
+    const CPK = CPKElement ? CPKElement.textContent : 'Não encontrado';
+    // Formata os dados do CPK
+    const CPKFormatada = ` CPK ${CPK} //`;
+    adicionarExame('CPK', CPK, CPKFormatada);
+
+    //D-DÍMERO
+    const ddimeroElement = document.getElementById('ddimero');
+    const ddimero = ddimeroElement ? ddimeroElement.textContent : 'Não encontrado';
+    // Formata os dados do D-DÍMERO
+    const ddimeroFormatada = ` D-DÍMERO ${ddimero} //`;
+    adicionarExame('ddimero', ddimero, ddimeroFormatada);
+
+    //CK-MB
+    const CKMBElement = document.getElementById('CKMB');
+    const CKMB = CKMBElement ? CKMBElement.textContent : 'Não encontrado';
+    // Formata os dados do CK-MB
+    const CKMBFormatada = ` CK-MB ${CKMB} //`;
+    adicionarExame('CKMB', CKMB, CKMBFormatada);
+
+    //NT-proBNP
+    const NTproBNPElement = document.getElementById('NTproBNP');
+    const NTproBNP = NTproBNPElement ? NTproBNPElement.textContent : 'Não encontrado';
+    // Formata os dados do NT-proBNP
+    const NTproBNPFormatada = ` NT-proBNP ${NTproBNP} //`;
+    adicionarExame('NTproBNP', NTproBNP, NTproBNPFormatada);
+
+    //LDH
+    const LDHElement = document.getElementById('LDH');
+    const LDH = LDHElement ? LDHElement.textContent : 'Não encontrado';
+    // Formata os dados do LDH
+    const LDHFormatada = ` LDH ${LDH} //`;
+    adicionarExame('LDH', LDH, LDHFormatada);
+
+    //FERRITINA
+    const ferritinaElement = document.getElementById('ferritina');
+    const ferritina = ferritinaElement ? ferritinaElement.textContent : 'Não encontrado';
+    // Formata os dados da FERRITINA
+    const ferritinaFormatada = ` FERRITINA ${ferritina} //`;
+    adicionarExame('ferritina', ferritina, ferritinaFormatada);
+
+    //FERRO SÉRICO
+    const ferrosericoElement = document.getElementById('ferroserico');
+    const ferroserico = ferrosericoElement ? ferrosericoElement.textContent : 'Não encontrado';
+    // Formata os dados do FERRO SÉRICO
+    const ferrosericoFormatada = ` FERRO SÉRICO ${ferroserico} //`;
+    adicionarExame('ferroserico', ferroserico, ferrosericoFormatada);
+
+
+
+
+
+
+    //Troponina I
+    const troponinaiElement = document.getElementById('troponinai');
+    const troponinai = troponinaiElement ? troponinaiElement.textContent : 'Não encontrado';
+    // Formata os dados da Troponina I
+    const troponinaiFormatada = ` TROPONINA I ${troponinai} //`;
+    adicionarExame('troponinai', troponinai, troponinaiFormatada);
+
+    //UPH
+    const uphElement = document.getElementById('uph');
+    const uph = uphElement ? uphElement.textContent : 'Não encontrado';
+    // Formata os dados do UPH
+    const uphFormatada = ` UPH ${uph} //`;
+    adicionarExame('uph', uph, uphFormatada);
+
+    //FA
+    const FAElement = document.getElementById('FA');
+    const FA = FAElement ? FAElement.textContent : 'Não encontrado';
+    // Formata os dados da FA
+    const FAFormatada = ` FA ${FA} //`;
+    adicionarExame('FA', FA, FAFormatada);
+
+    //IST
+    const istElement = document.getElementById('ist');
+    const ist = istElement ? istElement.textContent : 'Não encontrado';
+    // Formata os dados do IST
+    const istFormatada = ` IST ${ist} //`;
+    adicionarExame('ist', ist, istFormatada);
+
+    //T4
+    const T4Element = document.getElementById('T4');
+    const T4 = T4Element ? T4Element.textContent : 'Não encontrado';
+    // Formata os dados do T4
+    const T4Formatada = ` T4 ${T4} //`;
+    adicionarExame('T4', T4, T4Formatada);
+
+    //TSH
+    const TSHElement = document.getElementById('TSH');
+    const TSH = TSHElement ? TSHElement.textContent : 'Não encontrado';
+    // Formata os dados do TSH
+    const TSHFormatada = ` TSH ${TSH} //`;
+    adicionarExame('TSH', TSH, TSHFormatada);
+
+    // Captura e formata os dados da Vitamina D
+    const vitaminaDElement = document.getElementById('vitaminaD');
+    const vitaminaD = vitaminaDElement ? vitaminaDElement.textContent : 'Não encontrado';
+    // Formata os dados da Vitamina D
+    const vitaminaDFormatada = ` Vit. D ${vitaminaD} //`;
+    adicionarExame('vitaminaD', vitaminaD, vitaminaDFormatada);
+
+    // Captura e formata os dados da Vitamina B12
+    const vitB12Element = document.getElementById('vitB12');
+    const vitB12 = vitB12Element ? vitB12Element.textContent : 'Não encontrado';
+    // Formata os dados da Vitamina B12
+    const vitB12Formatada = ` Vit. B12 ${vitB12} //`;
+    adicionarExame('vitB12', vitB12, vitB12Formatada);
+
+    // Captura e formata os dados do PTH Intacto
+    const PTHintactoElement = document.getElementById('PTHintacto');
+    const PTHintacto = PTHintactoElement ? PTHintactoElement.textContent : 'Não encontrado';
+    // Formata os dados do PTH Intacto
+    const PTHintactoFormatada = ` PTH Intacto ${PTHintacto} //`;
+    adicionarExame('PTHintacto', PTHintacto, PTHintactoFormatada);
+
+    // Captura e formata os dados do Ritmo de Cortisol
+    const RCElement = document.getElementById('RC');
+    const RC = RCElement ? RCElement.textContent : 'Não encontrado';
+    // Formata os dados do Ritmo de Cortisol
+    const RCFormatada = ` Ritmo Cortisol ${RC} //`;
+    adicionarExame('RC', RC, RCFormatada);
+
+    // Captura e formata os dados da Gama GGT
+    const gamaGGTElement = document.getElementById('gamaGGT');
+    const gamaGGT = gamaGGTElement ? gamaGGTElement.textContent : 'Não encontrado';
+    // Formata os dados da Gama GGT
+    const gamaGGTFormatada = ` Gama GGT ${gamaGGT} //`;
+    adicionarExame('gamaGGT', gamaGGT, gamaGGTFormatada);
+
+    // Captura e formata os dados da Lipase
+    const lipaseElement = document.getElementById('lipase');
+    const lipase = lipaseElement ? lipaseElement.textContent : 'Não encontrado';
+    // Formata os dados da Lipase
+    const lipaseFormatada = ` Lipase ${lipase} //`;
+    adicionarExame('lipase', lipase, lipaseFormatada);
+
+    // Captura e formata os dados da Amilase
+    const amilaseElement = document.getElementById('amilase');
+    const amilase = amilaseElement ? amilaseElement.textContent : 'Não encontrado';
+    // Formata os dados da Amilase
+    const amilaseFormatada = ` Amilase ${amilase} //`;
+    adicionarExame('amilase', amilase, amilaseFormatada);
+
+    // Captura e formata os dados do Fibrinogênio
+    const fibrinogenioElement = document.getElementById('fibrinogenio');
+    const fibrinogenio = fibrinogenioElement ? fibrinogenioElement.textContent : 'Não encontrado';
+    // Formata os dados do Fibrinogênio
+    const fibrinogenioFormatada = ` Fibrinogênio ${fibrinogenio} //`;
+    adicionarExame('fibrinogenio', fibrinogenio, fibrinogenioFormatada);
+
+
+
+    //Resultado de Antígenos do SARS-CoV-2
+    const RASARSCoV2Element = document.getElementById('RASARSCoV2');
+    const RASARSCoV2 = RASARSCoV2Element ? RASARSCoV2Element.textContent : 'Não encontrado';
+    // Formata os dados do Resultado de Antígenos do SARS-CoV-2
+    const RASARSCoV2Formatada = ` Resultado de Antígenos do SARS-CoV-2 ${RASARSCoV2} //`;
+    adicionarExame('RASARSCoV2', RASARSCoV2, RASARSCoV2Formatada);
+
+    //ANTI-HBc IgM (HEPATITE B)
+    const antihbcigmElement = document.getElementById('antihbcigm');
+    const antihbcigm = antihbcigmElement ? antihbcigmElement.textContent : 'Não encontrado';
+    // Formata os dados do ANTI-HBc IgM (HEPATITE B)
+    const antihbcigmFormatada = ` ANTI-HBc IgM (HEPATITE B) ${antihbcigm} //`;
+    adicionarExame('antihbcigm', antihbcigm, antihbcigmFormatada);
+
+    //ANTI-HBc TOTAL (HEPATITE B)
+    const antihbctotalElement = document.getElementById('antihbctotal');
+    const antihbctotal = antihbctotalElement ? antihbctotalElement.textContent : 'Não encontrado';
+    // Formata os dados do ANTI-HBc TOTAL (HEPATITE B)
+    const antihbctotalFormatada = ` ANTI-HBc TOTAL (HEPATITE B) ${antihbctotal} //`;
+    adicionarExame('antihbctotal', antihbctotal, antihbctotalFormatada);
+
+    //ANTI-HBS (HEPATITE B)
+    const antihbsElement = document.getElementById('antihbs');
+    const antihbs = antihbsElement ? antihbsElement.textContent : 'Não encontrado';
+    // Formata os dados do ANTI-HBS (HEPATITE B)
+    const antihbsFormatada = ` ANTI-HBS (HEPATITE B) ${antihbs} //`;
+    adicionarExame('antihbs', antihbs, antihbsFormatada);
+
+    //Detecção de Antígeno de Superfície do Vírus da Hepatite B (HBS-Ag)
+    const dasvhbElement = document.getElementById('dasvhb');
+    const dasvhb = dasvhbElement ? dasvhbElement.textContent : 'Não encontrado';
+    // Formata os dados da Detecção de Antígeno de Superfície do Vírus da Hepatite B (HBS-Ag)
+    const dasvhbFormatada = ` Detecção de Antígeno de Superfície do Vírus da Hepatite B (HBS-Ag) ${dasvhb} //`;
+    adicionarExame('dasvhb', dasvhb, dasvhbFormatada);
+
+    //HBsAg (HEPATITE B)
+    const hbsagElement = document.getElementById('hbsag');
+    const hbsag = hbsagElement ? hbsagElement.textContent : 'Não encontrado';
+    // Formata os dados do HBsAg (HEPATITE B)
+    const hbsagFormatada = ` HBsAg (HEPATITE B) ${hbsag} //`;
+    adicionarExame('hbsag', hbsag, hbsagFormatada);
+
+    //Detecção de Anticorpo contra o vírus da hepatite C (anti-HCV)
+    const dacvhcElement = document.getElementById('dacvhc');
+    const dacvhc = dacvhcElement ? dacvhcElement.textContent : 'Não encontrado';
+    // Formata os dados da Detecção de Anticorpo contra o vírus da hepatite C (anti-HCV)
+    const dacvhcFormatada = ` Detecção de Anticorpo contra o vírus da hepatite C (anti-HCV) ${dacvhc} //`;
+    adicionarExame('dacvhc', dacvhc, dacvhcFormatada);
+
+    //ANTI-HCV (HEPATITE C)
+    const antihcvElement = document.getElementById('antihcv');
+    const antihcv = antihcvElement ? antihcvElement.textContent : 'Não encontrado';
+    // Formata os dados do ANTI-HCV (HEPATITE C)
+    const antihcvFormatada = ` ANTI-HCV (HEPATITE C) ${antihcv} //`;
+    adicionarExame('antihcv', antihcv, antihcvFormatada);
+
+    //VDRL
+    const VDRLElement = document.getElementById('VDRL');
+    const VDRL = VDRLElement ? VDRLElement.textContent : 'Não encontrado';
+    // Formata os dados do VDRL
+    const VDRLFormatada = ` VDRL ${VDRL} //`;
+    adicionarExame('VDRL', VDRL, VDRLFormatada);
+
+    //Detecção de Anticorpos ANTI-HIV 1 E 2
+    const daANTIHIV1e2Element = document.getElementById('daANTIHIV1e2');
+    const daANTIHIV1e2 = daANTIHIV1e2Element ? daANTIHIV1e2Element.textContent : 'Não encontrado';
+    // Formata os dados da Detecção de Anticorpos ANTI-HIV 1 E 2
+    const daANTIHIV1e2Formatada = ` Detecção de Anticorpos ANTI-HIV 1 E 2 ${daANTIHIV1e2} //`;
+    adicionarExame('daANTIHIV1e2', daANTIHIV1e2, daANTIHIV1e2Formatada);
+
+    //HIV 1 e 2, ANTÍGENO/ANTICORPOS
+    const hiv1e2Element = document.getElementById('hiv1e2');
+    const hiv1e2 = hiv1e2Element ? hiv1e2Element.textContent : 'Não encontrado';
+    // Formata os dados do HIV 1 e 2, ANTÍGENO/ANTICORPOS
+    const hiv1e2Formatada = ` HIV 1 e 2, ANTÍGENO/ANTICORPOS ${hiv1e2} //`;
+    adicionarExame('hiv1e2', hiv1e2, hiv1e2Formatada);
+
+    //Anticorpo IgG contra Treponema Pallidum
+    const aIgGcTPElement = document.getElementById('aIgGcTP');
+    const aIgGcTP = aIgGcTPElement ? aIgGcTPElement.textContent : 'Não encontrado';
+    // Formata os dados do Anticorpo IgG contra Treponema Pallidum
+    const aIgGcTPFormatada = ` Anticorpo IgG contra Treponema Pallidum ${aIgGcTP} //`;
+    adicionarExame('aIgGcTP', aIgGcTP, aIgGcTPFormatada);
+
+    //IGA
+    const IGAElement = document.getElementById('IGA');
+    const IGA = IGAElement ? IGAElement.textContent : 'Não encontrado';
+    // Formata os dados do IGA
+    const IGAFormatada = ` IGA ${IGA} //`;
+    adicionarExame('IGA', IGA, IGAFormatada);
+
+    //IGM
+    const IGMElement = document.getElementById('IGM');
+    const IGM = IGMElement ? IGMElement.textContent : 'Não encontrado';
+    // Formata os dados do IGM
+    const IGMFormatada = ` IGM ${IGM} //`;
+    adicionarExame('IGM', IGM, IGMFormatada);
+
+    //IGG
+    const IGGElement = document.getElementById('IGG');
+    const IGG = IGGElement ? IGGElement.textContent : 'Não encontrado';
+    // Formata os dados do IGG
+    const IGGFormatada = ` IGG ${IGG} //`;
+    adicionarExame('IGG', IGG, IGGFormatada);
+
+    //Fator Reumatoide
+    const fatorreumatoideElement = document.getElementById('fatorreumatoide');
+    const fatorreumatoide = fatorreumatoideElement ? fatorreumatoideElement.textContent : 'Não encontrado';
+    // Formata os dados do Fator Reumatoide
+    const fatorreumatoideFormatada = ` Fator Reumatoide ${fatorreumatoide} //`;
+    adicionarExame('fatorreumatoide', fatorreumatoide, fatorreumatoideFormatada);
+
+
+
+    // Captura e formata os dados da Bioquímica de Líquidos Biológicos
+    const BLBElement = document.getElementById('BLB');
+    const BLB = BLBElement ? BLBElement.innerHTML : 'Não encontrado';
+
+    // Formata os dados da Bioquímica de Líquidos Biológicos
+    const BLBFormatado = `<b>BIOQUÍMICA DE LÍQUIDOS BIOLÓGICOS:</b> [${BLB}]<br>`;
+    adicionarExame('BLB', BLB, BLBFormatado);
+
+    // Captura e formata os dados da Citometria de Líquidos Biológicos
+    const CLBElement = document.getElementById('CLB');
+    const CLB = CLBElement ? CLBElement.innerHTML : 'Não encontrado';
+
+    // Formata os dados da Citometria de Líquidos Biológicos
+    const CLBFormatado = `<b>CITOMETRIA DE LÍQUIDOS BIOLÓGICOS:</b> [${CLB}]<br>`;
+    adicionarExame('CLB', CLB, CLBFormatado);
+
+
+    //BAAR
+    const BAARElement = document.getElementById('BAAR');
+    const BAAR = BAARElement ? BAARElement.textContent : 'Não encontrado';
+    // Formata os dados do BAAR
+    const BAARFormatada = ` BAAR ${BAAR} //`;
+    adicionarExame('BAAR', BAAR, BAARFormatada);
+
+    //GRAM
+    const GRAMElement = document.getElementById('GRAM');
+    const GRAM = GRAMElement ? GRAMElement.textContent : 'Não encontrado';
+    // Formata os dados do GRAM
+    const GRAMFormatada = ` GRAM ${GRAM} //`;
+    adicionarExame('GRAM', GRAM, GRAMFormatada);
+
+    //Cultura de Bactérias Aeróbias
+    const CBAElement = document.getElementById('CBA');
+    const CBA = CBAElement ? CBAElement.textContent : 'Não encontrado';
+    // Formata os dados da Cultura de Bactérias Aeróbias
+    const CBAFormatada = ` Cultura de Bactérias Aeróbias ${CBA} //`;
+    adicionarExame('CBA', CBA, CBAFormatada);
+
+    //Pesquisa de Fungos
+    const PFElement = document.getElementById('PF');
+    const PF = PFElement ? PFElement.textContent : 'Não encontrado';
+    // Formata os dados da Pesquisa de Fungos
+    const PFFormatada = ` Pesquisa de Fungos ${PF} //`;
+    adicionarExame('PF', PF, PFFormatada);
+
+    //Cultura de Fungos
+    const CFElement = document.getElementById('CF');
+    const CF = CFElement ? CFElement.textContent : 'Não encontrado';
+    // Formata os dados da Cultura de Fungos
+    const CFFormatada = ` Cultura de Fungos ${CF} //`;
+    adicionarExame('CF', CF, CFFormatada);
+    
+    // Captura e formata os dados da Cultura Micobactérias
+    const CMElement = document.getElementById('CM');
+    const CM = CMElement ? CMElement.innerHTML : 'Não encontrado';
+    // Formata os dados da Cultura Micobactérias
+    const CMFormatado = `<b>CULTURA MICOBACTÉRIAS:</b> [${CM}]<br>`;
+    adicionarExame('CM', CM, CMFormatado);
+
+
+    // Captura e formata os dados da Gasometria Arterial
+    const gasometriaElement = document.getElementById('gasometria');
+    let gasometria = gasometriaElement ? gasometriaElement.innerHTML : 'Não encontrado';
+    // Substitui quebras de linha por barras e remove espaços extras
+    gasometria = gasometria.replace(/<br\s*\/?>/gi, ' / ').replace(/\s+/g, ' ').trim();
+    // Formata os dados da Gasometria Arterial
+    const gasometriaFormatada = `<b> GASOMETRIA ARTERIAL:</b> [${gasometria}] //`;
+    adicionarExame('gasometria', gasometria, gasometriaFormatada);
+
+    // Captura e formata os dados da Gasometria Venosa
+    const gasometriaVenosaElement = document.getElementById('gasometriaVenosa');
+    let gasometriaVenosa = gasometriaVenosaElement ? gasometriaVenosaElement.innerHTML : 'Não encontrado';
+    // Substitui quebras de linha por barras e remove espaços extras
+    gasometriaVenosa = gasometriaVenosa.replace(/<br\s*\/?>/gi, ' / ').replace(/\s+/g, ' ').trim();
+    // Formata os dados da Gasometria Venosa
+    const gasometriaVenosaFormatada = `<b> GASOMETRIA VENOSA:</b> [${gasometriaVenosa} //]`;
+    adicionarExame('gasometriaVenosa', gasometriaVenosa, gasometriaVenosaFormatada);
+
+    // Captura e formata os dados da Proteína Total e Frações
+    const proteinatotalfracoesElement = document.getElementById('proteinatotalfracoes');
+    let proteinatotalfracoes = proteinatotalfracoesElement ? proteinatotalfracoesElement.innerHTML : 'Não encontrado';
+    // Substitui quebras de linha por barras e remove espaços extras
+    proteinatotalfracoes = proteinatotalfracoes.replace(/<br\s*\/?>/gi, ' / ').replace(/\s+/g, ' ').trim();
+    // Substitui os termos na string proteinatotalfracoes
+    proteinatotalfracoes = proteinatotalfracoes.replace(/Proteína Totais:/g, 'PROT. TOTAIS:').replace(/Albumina:/g, 'ALB.:').replace(/Globulinas:/g, 'GLOB.:').replace(/Relação ALB\/GLOB:/g, 'ALB/GLOB:');
+    // Formata os dados da Proteína Total e Frações
+    const proteinatotalfracoesFormatada = `<b> PROTEÍNA TOTAL E FRAÇÕES:</b> [${proteinatotalfracoes}] //`;
+    adicionarExame('proteinatotalfracoes', proteinatotalfracoes, proteinatotalfracoesFormatada);
+
+    // Adiciona o HTML formatado à div de síntese
+    sinteseDiv.innerHTML = sinteseHTML;
+    
+
+    // Adiciona o event listener ao botão "Copiar"
+    const copiarSinteseButton = document.getElementById('copiarSinteseButton');
+    const sinteseResultados = document.getElementById('sintese-resultados');
+    const imprimirSinteseButton = document.getElementById('imprimirSinteseButton');
+    const copiarIconeSinteseButton = document.getElementById('copiarIconeSinteseButton');
+
+
+    copiarSinteseButton.addEventListener('click', () => {
+        try {
+            // Coletar o texto da div sintese-resultados
+            const textToCopy = sinteseResultados.textContent.trim();
+
+            // Copiar o texto para a área de transferência
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // Copiado com sucesso
+                copiarSinteseButton.textContent = 'Copiar';
+                setTimeout(() => {
+                    copiarSinteseButton.textContent = 'Copiado!';
+                }, 2000);
+            }).catch(err => {
+                // Erro ao copiar
+                console.error('Falha ao copiar a síntese:', err);
+                alert('Ocorreu um erro ao copiar a síntese.');
+            });
+        } catch (error) {
+            console.error('Erro ao processar cópia da síntese:', error);
+            alert('Ocorreu um erro ao copiar a síntese.');
+        }
+    });
+    // Adiciona o event listener ao botão "Copiar Ícone"
+    copiarIconeSinteseButton.addEventListener('click', () => {
+        try {
+            // Coletar o texto da div sintese-resultados
+            const textToCopy = sinteseResultados.textContent.trim();
+
+            // Copiar o texto para a área de transferência
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // Copiado com sucesso
+                copiarIconeSinteseButton.innerHTML = '&#x1F197;';
+                setTimeout(() => {
+                    copiarIconeSinteseButton.innerHTML = '&#x2705;';
+                }, 2000);
+            }).catch(err => {
+                // Erro ao copiar
+                console.error('Falha ao copiar a síntese:', err);
+                alert('Ocorreu um erro ao copiar a síntese.');
+            });
+        } catch (error) {
+            console.error('Erro ao processar cópia da síntese:', error);
+            alert('Ocorreu um erro ao copiar a síntese.');
+        }
+    });
+    copiarSinteseButton.classList.remove('hidden');
+    imprimirSinteseButton.classList.remove('hidden');
+    copiarIconeSinteseButton.classList.remove('hidden');
+
+    // Adiciona o event listener ao botão "Imprimir"
+    imprimirSinteseButton.addEventListener('click', () => {
+        // Importa a biblioteca jsPDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4'); // 'p' para portrait, 'mm' para milímetros, 'a4' para o tamanho da página
+
+        // Define a fonte e o tamanho
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(12);
+
+        // Obtém o nome do paciente e a data do exame
+        const nomePaciente = document.getElementById('pct').textContent;
+        const dataExame = document.getElementById('dataExame').textContent;
+
+        // Define o título
+        const titulo = `${nomePaciente} - ${dataExame}`;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const titleWidth = doc.getTextWidth(titulo);
+        const titleX = (pageWidth - titleWidth) / 2;
+        doc.text(titulo, titleX, 10); // Posição (x, y) do título
+
+
+        // Obtém o conteúdo da síntese
+        const sinteseText = sinteseResultados.textContent;
+
+        // Divide o texto em linhas para caber na página
+        const lines = doc.splitTextToSize(sinteseText, 150);
+
+        // Define a fonte para Times New Roman
+        doc.setFont('times', 'normal');
+        doc.setFontSize(12);
+
+        
+        // Adiciona o texto ao PDF, linha por linha
+        let y = 20; // Posição inicial do texto
+        for (let i = 0; i < lines.length; i++) {
+            if (y > 280) { // 280 é a altura máxima do texto em mm (considerando margens)
+                doc.addPage();
+                y = 10; // Reinicia a posição y na nova página
+            }
+            doc.text(lines[i], 10, y);
+            y += 7; // Espaçamento entre as linhas
+        }
+
+        // Abre o PDF em uma nova guia
+        window.open(doc.output('bloburl'), '_blank');
+    });
+}
