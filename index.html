@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    </head>
+    
     <title>Analisador de PDF</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -10,8 +14,13 @@
     
     <div id="patient-name-header" class="hidden">
         <button id="scrollToTopButton" title="Ir para o topo">&#x23EB;</button>
+        <button id="imprimirIconeSinteseButton" title="Imprimir Síntese">&#x1F5A8;&#xFE0F;</button>
         <span id="patient-name"></span>&nbsp;-&nbsp;<span id="exam-date"></span>
         <button id="scrollToBottomButton" title="Ir para o final">&#x23EC;</button>
+        <button id="generateSínteseButton" title="Gerar Síntese">&#x1F504;</button>
+        <button id="copiarIconeSinteseButton" title="Copiar Síntese">&#9989;</button>
+
+
     </div>    
 
 
@@ -40,7 +49,7 @@
     </div>
     
     <div id="dados-gerais" class="hidden">
-        <h2>&#x1F4D6;	Dados Gerais:</h2>
+        <h2>&#x1F4D6;	Dados do Paciente:</h2>
         <p><strong>PCT:</strong> <span id="pct"></span></p>
         <p><strong>Sexo:</strong> <span id="sexo"></span></p>
         <p><strong>Idade:</strong> <span id="idade"></span></p>
@@ -157,12 +166,15 @@
         
         </div>
 
-        <button id="gerarResultadoButton" class="button">Gerar Resultado</button>
-
-        <div id="sintese-resultados" class="hidden">
-            <h2>📝 Síntese dos Resultados:</h2>
-            <div id="sintese-output"></div>
+        <div class="sintese-buttons">
+            <button id="imprimirSinteseButton" class="button">Imprimir</button>
+            <button id="gerarSinteseButton" class="button">Gerar Síntese</button>
+            <button id="copiarSinteseButton" class="button">Copiar</button>
         </div>
+                
+        <div id="sintese-resultados" class="hidden" contenteditable="true"></div>
+
+
 
 
         <!-- Nova div para o texto completo do PDF -->
