@@ -182,17 +182,23 @@ input[type="file"] {
 
 #scrollToBottomButton {
     position: absolute;
-    right: 80px; /* Posiciona o botão à direita */
+    right: 115px; /* Posiciona o botão à direita */
     top: 3px; /* Move o botão 3 pixels para BAIXO */
 }
 
 #generateSínteseButton {
     position: absolute;
-    right: 45px; /* Posiciona o botão à direita */
+    right: 80px; /* Posiciona o botão à direita */
     top: 3px; /* Move o botão 3 pixels para BAIXO */
 }
 
 #copiarIconeSinteseButton {
+    position: absolute;
+    right: 45px; /* Posiciona o botão à direita */
+    top: 3px; /* Move o botão 3 pixels para BAIXO */
+}
+
+#novoDocumentoIconeSinteseButton {
     position: absolute;
     right: 10px; /* Posiciona o botão à direita */
     top: 3px; /* Move o botão 3 pixels para BAIXO */
