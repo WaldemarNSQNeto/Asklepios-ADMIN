@@ -33,6 +33,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const generateSinteseButton = document.getElementById('generateSínteseButton');
     const gerarSinteseButton = document.getElementById('gerarSinteseButton');
 
+    // Adiciona um evento de clique ao botão "Novo Documento" (ícone)
+    const novoDocumentoIconeSinteseButton = document.getElementById('novoDocumentoIconeSinteseButton');
+    const resetButton = document.getElementById('resetButton');
+
+    if (novoDocumentoIconeSinteseButton && resetButton) {
+        novoDocumentoIconeSinteseButton.addEventListener('click', function() {
+            resetButton.click(); // Simula um clique no botão "resetButton"
+        });
+    }
+    
     if (generateSinteseButton && gerarSinteseButton) {
         generateSinteseButton.addEventListener('click', function() {
             gerarSinteseButton.click(); // Simula um clique no botão "Gerar Síntese"
@@ -1886,6 +1896,8 @@ document.addEventListener('DOMContentLoaded', function () {
             location.reload(); // Recarrega a página
         });
     }
+
+    
 
     // Adiciona um evento de clique ao botão "Gerar Síntese"
     document.getElementById('gerarSinteseButton').addEventListener('click', function() {
