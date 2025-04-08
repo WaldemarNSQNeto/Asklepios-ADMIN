@@ -10,6 +10,9 @@ body {
     align-items: center;
     min-height: 100vh;
     color: #343a40;
+    flex-direction: column; /* Garante que os elementos sejam organizados em coluna */
+    
+
 }
 
 .container {
@@ -93,8 +96,15 @@ input[type="file"] {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-top: 15px;
+    margin-top: 0px; /* Mantendo a margem superior em 0 */
+    margin-bottom: 20px; /* Adicionando a margem inferior de 20 pixels */
+    display: block; /* Garante que o botão fique em uma nova linha */
+    width: 100%; /* Faz o botão ocupar toda a largura disponível */
+    max-width: 300px; /* Define uma largura máxima para o botão */
+    margin-left: auto;
+    margin-right: auto;
 }
+
 
 #resetButton:hover {
     background-color: #0056b3;
@@ -615,3 +625,13 @@ input[type="file"] {
     align-items: center;
 }
 
+footer {
+    background-color: white;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    width: 100%;
+    font-size: 0.8em;
+    position: relative; /* Fixa o footer na tela */
+    bottom: 0px; /* Define a distância de 10 pixels da parte inferior */
+    left: 0; /* Alinha o footer à esquerda */
+}
