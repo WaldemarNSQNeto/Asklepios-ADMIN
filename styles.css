@@ -190,6 +190,14 @@ input[type="file"] {
 
 }
 
+#copiarpuroIconeSinteseButton {
+    position: absolute;
+    left: 80px; /* Posiciona o botão à esquerda */
+    top: 3px; /* Move o botão 3 pixels para BAIXO */
+
+}
+
+
 #scrollToBottomButton {
     position: absolute;
     right: 115px; /* Posiciona o botão à direita */
@@ -538,6 +546,40 @@ input[type="file"] {
 
 }
 
+/*---------------*/
+
+/* Estilos para o botão "Copiar (Puro)" */
+#copiarpuroSinteseButton {
+    /* --- Estilos copiados de #copiarSinteseButton --- */
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    font-size: 16px;
+    font-weight: 500;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+    text-transform: none;
+    display: inline-block; /* Garante que fique na mesma linha dos outros */
+    text-align: center;
+    width: auto;
+    min-width: 100px; /* Mantém a largura mínima consistente */
+    height: auto;
+    margin-bottom: 20px; /* Mantém a margem consistente */
+
+    /* --- Cor específica para este botão --- */
+    background-color: #225d00; 
+    border: 1px solid #225d00; 
+}
+
+#copiarpuroSinteseButton:hover {
+    /* --- Sombra copiada de #copiarSinteseButton:hover --- */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+    /* --- Cor específica de hover para este botão --- */
+    background-color: #01320d;
+}
+
+/*---------------*/
 
 /* Estilos para o botão "Gerar Síntese" - Versão Moderna e Sutil */
 #gerarSinteseButton {
