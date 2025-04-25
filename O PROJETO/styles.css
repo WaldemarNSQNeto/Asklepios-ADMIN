@@ -677,3 +677,85 @@ footer {
     bottom: 0px; /* Define a distância de 10 pixels da parte inferior */
     left: 0; /* Alinha o footer à esquerda */
 }
+
+
+/* --- Estilos do Popup de Atualização --- */
+#popup-overlay {
+    position: fixed; /* Cobre toda a tela */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Fundo preto semi-transparente */
+    z-index: 999; /* Fica abaixo do popup, mas acima do resto */
+  }
+  
+  .popup {
+    position: fixed; /* Fica fixo na tela */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centraliza o popup */
+    background-color: #f0f0f0; /* Cor de fundo do popup */
+    padding: 25px 35px;
+    border: 1px solid #ccc;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1000; /* Fica acima de tudo */
+    max-width: 550px; /* Largura máxima */
+    width: 90%; /* Responsivo */
+    border-radius: 8px;
+  }
+  
+  .popup h2 {
+    margin-top: 0;
+    color: #333;
+    text-align: center;
+    font-size: 1.3em;
+    margin-bottom: 15px;
+  }
+  
+  .popup ul {
+    list-style: disc; /* Estilo da lista */
+    padding-left: 25px; /* Espaçamento interno da lista */
+    margin-bottom: 20px;
+    color: #555;
+  }
+  
+  .popup ul li {
+    margin-bottom: 12px; /* Espaçamento entre itens da lista */
+    line-height: 1.4;
+    text-align: justify; /* <<< ADICIONE ESTA LINHA */
+
+  }
+  
+  .popup .popup-author {
+    text-align: right;
+    margin-top: 15px;
+    margin-bottom: 15px; /* Adiciona margem inferior de 15px */
+    font-style: italic;
+    color: #240e0e;
+    font-size: 0.9em;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+    line-height: 1;
+  }
+  
+  .close-btn:hover {
+    color: #555;
+  }
+  
+  
+  /* Classe para esconder elementos (já deve existir, mas confirme) */
+  .hidden {
+    display: none;
+  }
+
+  
+  
