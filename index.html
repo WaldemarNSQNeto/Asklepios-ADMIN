@@ -110,6 +110,7 @@
             
             <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
             <script src="script.js"></script>
+            <script src="tableGenerator.js"></script>
 
 
         <div id="results-especificos" class="hidden">
@@ -143,8 +144,8 @@
             <p><strong>Ritmo de Cortisol:</strong> <span id="RC" title="VR: 3,7 - 19,4 μg/dL- 8Hs"></span></p>
             <p><strong>GAMA GGT:</strong> <span id="gamaGGT" title="VR: &#10 ♂: 12 - 64 U/L &#10 ♀: 9 - 36 U/L"></span></p>
             <p><strong>Ácido Úrico:</strong> <span id="acidourico" title="VR: &#10 ♂: 3,5 - 7,2 mg/dL &#10 ♀: 2,6 - 6,0 mg/dL &#10 Crianças: 2,0 - 5,5 mg/dL"></span></p>
-            <p><strong>Lipase:</strong> <span id="lipase" title="VR: 8 - 78 U/L"></span></p>
             <p><strong>Amilase:</strong> <span id="amilase" title="VR: &#10 Recém Nascido: 5 - 65 U/L  &#10 Adulto: 25 - 125 U/L &#10 >70 anos: 20 - 160 U/L"></span></p>
+            <p><strong>Lipase:</strong> <span id="lipase" title="VR: 8 - 78 U/L"></span></p>
             <p><strong>Fibrinogênio:</strong> <span id="fibrinogenio" title="VR: 180 - 350 mg/dL"></span></p>
             
             
@@ -195,7 +196,14 @@
 
 
 
-
+        <div class="section-container hidden" id="tabela-section">
+            <h2>Tabela de Exames para Planilha</h2>
+            <button id="gerarTabelaButton" class="action-button">Gerar Tabela</button>
+            <div id="tabelaContainer" class="hidden" style="margin-top: 20px; overflow-x: auto;">
+                <!-- A tabela e o botão de cópia serão inseridos aqui pelo JavaScript -->
+            </div>
+        </div>
+        
         <!-- Nova div para o texto completo do PDF -->
         <div id="full-text-container" class="hidden">
                 <label for="fullTextOutput">Texto bruto extraído do PDF enviado:</label>
@@ -215,11 +223,16 @@
         <div id="popup-overlay" class="hidden"></div>
         <div id="update-popup" class="popup hidden">
         <span id="close-popup" class="close-btn">&times;</span>
-        <h2>⚕️ Atualização 1.1.1 (26/04/2025) ⚕️</h2>
+        <h3>⚕️ Atualização 2.0 (27/04/2025) ⚕️</h3>
+        <h2 class="popup-title-flashy-neon">🤯 ThinkTime 🤯</h2>
+
         <ul>
-            <li>Correção do bug que não capturava elementos da GASOMETRIA VENOSA.
-            <li>Correção do bug que não capturada o elemento de "ESTERASE LEUCOCITÁRIA" no EAS. Porém, ainda em processo de resolução do bug em "SANGUE" neste mesmo elemento. Atente-se para o recado: <<<< ⚠️⚠️ VER ARQUIVO FONTE ⚠️⚠️ >>>>
-            <li>Correções de bugs e aprimoramento da performance do sistema.</li>
+            <li>Em sua primeira grandiossíma atualização, a Asklépios atende às demandas de nossos queridos Residentes para, ao toque de um clique, sintetizar de forma clara, lúdica e interativa os exames laboratoriais de nossos pacientes.
+            <li>Trata-se, fundamentalmente, de dar-lhes mais tempo e qualidade no pensar, reduzindo uma atividade que, embora importante, seja exaustiva: anotar diariamente os exames e suas evoluções.
+            <li>Ainda em fase de testes e produção - mas desde já dispobilizada por sua capacidade realmente revolucionária -, essa nova ferramenta possibilita ao usuário coletar os dados em forma de tabela e, com um clique, colá-la no <a> <a href="https://docs.google.com/spreadsheets/d/1Zrw2YbfVAK0_xhzX6b7bNFXw9xjFSCTc3BZ238p-SDs/edit?usp=sharing" target="_blank">modelo</a> por nós dispobilizados, permitindo uma comparação direta entre os valores e, consequentemente, a evolução laboratorial do paciente.</li>
+            <li>Além do mais, pensando em uma maior rapidez, há também uma idenficação por cor enquanto formatação condicional da tabela. Se vermelho claro, os valores estão aquém. Se azul-escuro, estão além.
+            <li>Ao longo dos próximos dias muitas coisas serão ajustadas e refinidas e, para isso, contamos com a colaboração de vocês para nos ajudar a encontrar bugs e/ou problemas no Site. Sintam-se à vontade para entrar em contato através do telefone apresentado no site.
+            <li>De resto, continuem acompanhando nossas atualizações através do Site. Um abraço a todos vocês!
         </ul>
         <p class="popup-author">By: Waldemar Neto - Interno Turma LXIX<p></p>⚕️ Asklépios Soluções Médicas⚕️
         </div>
