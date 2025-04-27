@@ -758,4 +758,55 @@ footer {
   }
 
   
-  
+  .popup-title-flashy-neon {
+    font-size: 2.2em;
+    font-weight: bold;
+    color: #fff; /* Cor base branca */
+    text-align: center;
+    margin-bottom: 20px;
+    /* Múltiplas sombras para criar o efeito neon - ajuste as cores! */
+    text-shadow:
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 20px #fff,
+        0 0 40px #00aeff, /* Cor do brilho principal (azul) */
+        0 0 80px #00aeff,
+        0 0 90px #00aeff,
+        0 0 100px #00aeff,
+        0 0 150px #00aeff;
+        animation: flicker 1.5s 2 alternate; /* <<< ALTERADO AQUI */
+
+}
+
+/* Animação de piscar (opcional) */
+@keyframes flicker {
+  0%,  22%, 53%, 100% {
+    text-shadow:
+        0 0 4px #fff,
+        0 0 11px #fff,
+        0 0 19px #fff,
+        0 0 40px #00aeff,
+        0 0 80px #00aeff,
+        0 0 90px #00aeff,
+        0 0 100px #00aeff,
+        0 0 150px #00aeff;
+  }
+  20%, 24%, 55% {
+    text-shadow: none;
+  }
+}
+
+.popup-title-flashy {
+    font-size: 2.5em; /* Aumenta bastante o tamanho */
+    font-weight: bold;
+    color: #fff; /* Cor do texto branca para contrastar */
+    background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #ff6b6b); /* Gradiente chamativo */
+    background-size: 400% 400%; /* Tamanho do gradiente para animação */
+    -webkit-background-clip: text; /* Aplica o gradiente APENAS ao texto (Chrome/Safari) */
+    background-clip: text;
+    color: transparent; /* Torna a cor original do texto transparente */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Sombra sutil para destacar */
+    text-align: center; /* Centraliza */
+    margin-bottom: 20px; /* Espaçamento abaixo */
+    animation: gradientBG 10s ease infinite; /* Animação do gradiente */
+}
