@@ -1,19 +1,73 @@
+<!--ALTERANDO!!!!!!!-->
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="icon" href="images/logo-pura.png" type="image/png">
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+
     </head>
     
-    <title>Analisador de PDF</title>
+    <title>ExAsklépios - HC/UFG</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+    
+    <div id="fullscreen-drop-overlay" style="display: none; /* Garante que comece oculto */
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 100, 0, 0.5);
+            z-index: 10000;
+            /* As propriedades de flexbox abaixo só terão efeito quando display for 'flex' via JS */
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            color: white;
+            text-align: center;
+            pointer-events: none; /* Importante para não bloquear quando oculto */
+            border: 3px dashed white;
+            box-sizing: border-box;">
+    Solte o PDF aqui para processá-lo
+    </div>
+
 <body>
     
+    <div id="login-screen" class="hidden"> <!-- Inicialmente hidden, auth.js vai mostrar -->
+        <div class="logo-container">
+            <img src="images/logo-empresa.png" alt="Logo ExAsklépios" class="login-logo-empresa">
+        </div>
+        <div class="login-container"> 
+            <h2>ExAsklépios - Login</h2>
+            <p>Sign in to your account</p>
+            <input type="text" id="username" placeholder="Login" autocomplete="username">
+            <input type="password" id="password" placeholder="Senha" autocomplete="current-password">
+            <button id="loginButton">Entrar</button>
+            <p id="login-error" class="hidden error-message"></p>
+        </div>
+        <!-- Nova caixa de contato/cadastro -->
+        <div class="signup-prompt-container">
+            <p>Novo no ExAsklépios? Deseja adquirir seu acesso?</p>
+            <p>Entre em contato <a href="https://wa.link/il0356" target="_blank">clicando aqui</a>.</p>
+        </div>
+
+        <!-- Logo Neto Group no canto inferior direito -->
+        <img src="images/logo-group.png" alt="Logo Neto Group" id="logo-neto-watermark">
+        </div>
+
+    <div id="app-content"> <!-- Conteúdo principal do aplicativo -->
+        <!-- Caixa para exibir o nome do usuário logado -->
+    <div id="user-display-box"></div>
+
+
     <div id="patient-name-header" class="hidden">
-        <button id="scrollToTopButton" title="Ir para o topo">&#x23EB;</button>
+        <button id="sairButton" title="Sair da Conta">&#x1F4F5;</button>
+        <button id="scrollToTopButton" title="Ir ao Topo">&#x23EB;</button>
         <button id="imprimirIconeSinteseButton" title="Imprimir Síntese">&#x1F5A8;&#xFE0F;</button>
         <button id="copiarpuroIconeSinteseButton" title="Copiar Síntese (Puro)">&#x1F4DD;</button> <!-- NOVO BOTÃO ÍCONE (Opcional) -->
         <span id="patient-name"></span>&nbsp;-&nbsp;<span id="exam-date"></span>
@@ -29,11 +83,11 @@
 
     <!--Segunda tela-->
     <div class="container">
-        <h1>ExAsklépios: Extrator de Exames - HC/UFG &#x1F4DA;</h1>
+        <h1>&#x1F4DA; ExAsklépios: Extrator de Exames - HC/UFG &#x1F4DA;</h1>
         <div id="drop-area">
-            <p>Arraste e solte o arquivo PDF aqui</p>
+            <p>Arraste e solte o arquivo PDF aqui ou</p>
             <input type="file" id="pdfInput" accept=".pdf" hidden>
-            <label for="pdfInput" class="button">Escolher documento (utilizável apenas na tela inicial)</label>
+            <label for="pdfInput" class="button">Clique aqui e escolha o arquivo</label>
         </div>
 
 
@@ -63,53 +117,64 @@
     <!--Texto corrido com os valores e referenciais-->
         <div id="results" class="hidden">
             <h2>&#129656; Exames Clássicos:</h2>
-            <p><strong>Hb:</strong> <span id="hb" title="VR: &#10 ♂: 13,0 - 17,0 g/dL &#10 ♀: 12,0 - 15,0 g/dL"></span></p>
-            <p><strong>Ht:</strong> <span id="ht" title="VR: &#10 ♂: 40 - 50 % &#10 ♀: 36,0 - 45,0 %"></span></p>
-            <p><strong>VCM:</strong> <span id="vcm" title="VR: 83 - 101 fL"></span></p>
-            <p><strong>HCM:</strong> <span id="hcm" title="VR: 27 - 32 pg"></span></p>
-            <p><strong>CHCM:</strong> <span id="chcm" title="VR: 31,5 - 34,5 g/dL"></span></p>
-            <p><strong>RDW:</strong> <span id="rdw" title="VR: 11,6 - 14,0 %"></span></p>
-            <p><strong>HEMATOSCOPIA:</strong> <span id="hematoscopia" title="VR: Nada consta"></span></p>
-            <p><strong>Leucócitos Totais:</strong> <span id="leucocitosTotais" title="VR: 4.000 - 10.000 /μL"></span></p>
-            <p><strong>Promielócitos:</strong> <span id="promielocitos" title="VR: 0% / 0/μL"></span></p>
-            <p><strong>Mielócitos:</strong> <span id="mielocitos" title="VR: 0% / 0/μL"></span></p>
-            <p><strong>Metamielócitos:</strong> <span id="metamielocitos" title="VR: 0% / 0/μL"></span></p>
-            <p><strong>Bastões:</strong> <span id="bastoes" title="VR: 2-5% / 80-500/μL"></span></p>
-            <p><strong>Segmentados:</strong> <span id="segmentados" title="VR: 40-78% / 1.600-7.800/μL"></span></p>
-            <p><strong>Eosinófilos:</strong> <span id="eosinofilos" title="VR: 2-5% / 80-500/μL"></span></p>
-            <p><strong>Basófilos:</strong> <span id="basofilos" title="VR: 0-2% / 0-200/μL"></span></p>
-            <p><strong>Linfócitos:</strong> <span id="linfocitos" title="VR: 20-44% / 800-4.400/μL"></span></p>
-            <p><strong>Linfócitos Atípicos:</strong> <span id="linfocitosAtipicos" title="VR: 0% / 0/μL"></span></p>
-            <p><strong>Monócitos:</strong> <span id="monocitos" title="VR: 2-11% / 80-1.100/μL"></span></p>
-            <p><strong>Blastos:</strong> <span id="blastos" title="VR: 0% / 0/μL"></span></p>
-            <p><strong>Plasmócitos:</strong> <span id="plasmocitos" title="VR: 0% / 0/μL"></span></p>
-            <p><strong>PLAQUETAS:</strong> <span id="plaquetas" title="VR: 150.000 - 450.000 /μL"></span></p>
+            <div id="hemograma-section" class="hidden"> <!-- Novo container para o hemograma -->
+                <p class="section-title-modern">HEMOGRAMA</p>
+                <p><strong>Hb:</strong> <span id="hb" title="VR: &#10 ♂: 13,0 - 17,0 g/dL &#10 ♀: 12,0 - 15,0 g/dL"></span></p>
+                <p><strong>Ht:</strong> <span id="ht" title="VR: &#10 ♂: 40 - 50 % &#10 ♀: 36,0 - 45,0 %"></span></p>
+                <p><strong>VCM:</strong> <span id="vcm" title="VR: 83 - 101 fL"></span></p>
+                <p><strong>HCM:</strong> <span id="hcm" title="VR: 27 - 32 pg"></span></p>
+                <p><strong>CHCM:</strong> <span id="chcm" title="VR: 31,5 - 34,5 g/dL"></span></p>
+                <p><strong>RDW:</strong> <span id="rdw" title="VR: 11,6 - 14,0 %"></span></p>
+                <p><strong>HEMATOSCOPIA:</strong> <span id="hematoscopia" title="VR: Nada consta"></span></p>
+                <p><strong>Leucócitos Totais:</strong> <span id="leucocitosTotais" title="VR: 4.000 - 10.000 /μL"></span></p>
+                <p><strong>Promielócitos:</strong> <span id="promielocitos" title="VR: 0% / 0/μL"></span></p>
+                <p><strong>Mielócitos:</strong> <span id="mielocitos" title="VR: 0% / 0/μL"></span></p>
+                <p><strong>Metamielócitos:</strong> <span id="metamielocitos" title="VR: 0% / 0/μL"></span></p>
+                <p><strong>Bastões:</strong> <span id="bastoes" title="VR: 2-5% / 80-500/μL"></span></p>
+                <p><strong>Segmentados:</strong> <span id="segmentados" title="VR: 40-78% / 1.600-7.800/μL"></span></p>
+                <p><strong>Eosinófilos:</strong> <span id="eosinofilos" title="VR: 2-5% / 80-500/μL"></span></p>
+                <p><strong>Basófilos:</strong> <span id="basofilos" title="VR: 0-2% / 0-200/μL"></span></p>
+                <p><strong>Linfócitos:</strong> <span id="linfocitos" title="VR: 20-44% / 800-4.400/μL"></span></p>
+                <p><strong>Linfócitos Atípicos:</strong> <span id="linfocitosAtipicos" title="VR: 0% / 0/μL"></span></p>
+                <p><strong>Monócitos:</strong> <span id="monocitos" title="VR: 2-11% / 80-1.100/μL"></span></p>
+                <p><strong>Blastos:</strong> <span id="blastos" title="VR: 0% / 0/μL"></span></p>
+                <p><strong>Plasmócitos:</strong> <span id="plasmocitos" title="VR: 0% / 0/μL"></span></p>
+                <p><strong>PLAQUETAS:</strong> <span id="plaquetas" title="VR: 150.000 - 450.000 /μL"></span></p>
+            </div>
+                        
+            <div id="eletrolitos-section" class="hidden"> <!-- Novo container para Eletrólitos -->
+                <p class="section-title-modern">ELETRÓLITOS</p>    
+                <p><strong>Na:</strong> <span id="sodio" title="VR: 136 - 145 mEq/L"></span></p>
+                <p><strong>K:</strong> <span id="potassio" title="VR: 3,5 - 5,1 mEq/L"></span></p>
+                <p><strong>Mg:</strong> <span id="magnesio" title="VR: 1,6 - 2,6 mg/dL"></span></p>
+                <p><strong>Ca Total (checar VR p/ cordão umbilical e prematuros no pop-up):</strong> <span id="calcioTotal" title="VR: &#10 Cordão Umbilical: 8,2 - 11,2 mg/dL &#10 Prematuro: 6,2 - 11,0 mg/dL &#10 0 a 10 dias: 7,6 - 10,4 mg/dL&#10 10 dias a 24 meses: 9,0 - 11,0 mg/dL&#10 Crianças de 2 a 12 anos: 8,8 - 10,2 mg/dL&#10 Adulto: 8,4 - 10,2 mg/dL"></span></p>
+                <p><strong>P:</strong> <span id="fosforo" title="VR:&#10Adultos: 2,3 - 4,7 mg/dL&#10Crianças: 4,0 - 7,0 mg/dL"></span></p>
+                <p><strong>Cl:</strong> <span id="cloro" title="VR: 98 - 107 mEq/L"></span></p>
+            </div>
             
-            <p><strong>Tempo de Protrombina:</strong> <span id="tempoProtrombina" title="VR: 11,0 - 15,0 seg."></span></p>
-            <p><strong>Atividade de Protrombina:</strong> <span id="atividadeProtrombina" title="VR: 70 - 100 %"></span></p>
-            <p><strong>INR:</strong> <span id="inr" title="VR: 1,00 - 1,25"></span></p>
-            <p><strong>UR:</strong> <span id="ureia" title="VR: 10 - 50 mg/dL"></span></p>
-            <p><strong>CR:</strong> <span id="creatinina" title="VR: &#10 ♂: 0,7 - 1,3 &#10 ♀: 0,6 - 1,1 mg/dL"></span></p>
-            <p><strong>Na:</strong> <span id="sodio" title="VR: 136 - 145 mEq/L"></span></p>
-            <p><strong>K:</strong> <span id="potassio" title="VR: 3,5 - 5,1 mEq/L"></span></p>
-            <p><strong>Mg:</strong> <span id="magnesio" title="VR: 1,6 - 2,6 mg/dL"></span></p>
-            <p><strong>Ca Total (checar VR p/ cordão umbilical e prematuros no pop-up):</strong> <span id="calcioTotal" title="VR: &#10 Cordão Umbilical: 8,2 - 11,2 mg/dL &#10 Prematuro: 6,2 - 11,0 mg/dL &#10 0 a 10 dias: 7,6 - 10,4 mg/dL&#10 10 dias a 24 meses: 9,0 - 11,0 mg/dL&#10 Crianças de 2 a 12 anos: 8,8 - 10,2 mg/dL&#10 Adulto: 8,4 - 10,2 mg/dL"></span></p>
-            <p><strong>P:</strong> <span id="fosforo" title="VR:&#10Adultos: 2,3 - 4,7 mg/dL&#10Crianças: 4,0 - 7,0 mg/dL"></span></p>
-            <p><strong>Cl:</strong> <span id="cloro" title="VR: 98 - 107 mEq/L"></span></p>
-            <p><strong>Glicemia (se casual, checar VR no pop-up):</strong> <span id="glicemia" title="VR: &#10 Jejum: 70 - 99 mg/dL &#10 Casual: < 200 mg/dL"></span></p>
-            <p><strong>TGO/AST:</strong> <span id="tgoAst" title="VR: 5 - 34 U/L"></span></p>
-            <p><strong>TGP/ALT:</strong> <span id="tgp" title="VR: < 55 U/L"></span></p>
-            <p><strong>PCR:</strong> <span id="pcr" title="VR: < 0,5 g/dL"></span></p>
-            <p><strong>TTPA / RATIO:</strong> <span id="ttpaRatio" title="VR:&#10TTPA: 24 - 40 seg. &#10RATIO: 0.850 - 1.250"></span></p>
-            <p><strong>BT / BD / BI:</strong> <span id="bilirrubina" title="VR:&#10BT: < 1,20 mg/dL &#10BD: < 0,40 mg/dL &#10BI: < 0,80 mg/dL"></span></p>
-            <p><strong>GASOMETRIA ARTERIAL:</strong> <span id="gasometria" title="VR:&#10 FIO2: correlacionar c/ a clínica &#10 pH: 7,350 - 7,450 &#10 pCO2: 35,0 - 45,0 mmHg &#10 pO2: 83,0 - 108 mmHg &#10 HCO3: 21,0 - 28,0 mmol/L &#10 BE (B): -2 a +3 mmol/L &#10 SatO2: 95 a 98% &#10 Lac: 0 a 2,2 mmol/L"></span></p>
-            <p><strong>GASOMETRIA VENOSA:</strong> <span id="gasometriaVenosa" title="VR:&#10 FIO2: correlacionar c/ a clínica &#10 pH: 7,350 - 7,450 &#10 pCO2: 35,0 - 45,0 mmHg &#10 pO2: 83,0 - 108 mmHg &#10 HCO3: 21,0 - 28,0 mmol/L &#10 BE (B): -2 a +3 mmol/L &#10 SatO2: 95 a 98% &#10 Lac: 0 a 2,20 mmol/L"></span></p>
-            <p><strong>EAS:</strong> <span id="eas" title="VR:&#10 Cor: Amarelo Citrino &#10 Aspecto: Límpido &#10 pH: 5,0 a 7,0 &#10 Densidade: 1.010 a 1.030 &#10 Proteínas: Ausentes &#10 Glicose: Ausente &#10 Cetona: Ausentes &#10 Bilirrubina: Ausente &#10 Sangue: Ausente &#10 Urobilinogênio: Normal &#10 Nitrito: Negativo &#10 Ácido Ascórbico: Ausente &#10 Esterase Leucocitária: Negativo &#10 Células epiteliais: Ausente &#10 Leucócitos / Piócitos: < ou = a 10.000/mL &#10 Hemácias: < ou = a 8.000/mL &#10 Cilindros: Ausente &#10 Cristais: Ausente &#10 Filamentos de Muco: Ausente"></span></p>
+            <div id="demais-section" class="hidden"> <!-- Novo container para Demais Exames -->
+                <p class="section-title-modern">DEMAIS EXAMES</p>  
+                <p><strong>Tempo de Protrombina:</strong> <span id="tempoProtrombina" title="VR: 11,0 - 15,0 seg."></span></p>
+                <p><strong>Atividade de Protrombina:</strong> <span id="atividadeProtrombina" title="VR: 70 - 100 %"></span></p>
+                <p><strong>INR:</strong> <span id="inr" title="VR: 1,00 - 1,25"></span></p>
+                <p><strong>UR:</strong> <span id="ureia" title="VR: 10 - 50 mg/dL"></span></p>
+                <p><strong>CR:</strong> <span id="creatinina" title="VR: &#10 ♂: 0,7 - 1,3 &#10 ♀: 0,6 - 1,1 mg/dL"></span></p>
+                <p><strong>Glicemia (se casual, checar VR no pop-up):</strong> <span id="glicemia" title="VR: &#10 Jejum: 70 - 99 mg/dL &#10 Casual: < 200 mg/dL"></span></p>
+                <p><strong>TGO/AST:</strong> <span id="tgoAst" title="VR: 5 - 34 U/L"></span></p>
+                <p><strong>TGP/ALT:</strong> <span id="tgp" title="VR: < 55 U/L"></span></p>
+                <p><strong>PCR:</strong> <span id="pcr" title="VR: < 0,5 g/dL"></span></p>
+                <p><strong>TTPA / RATIO:</strong> <span id="ttpaRatio" title="VR:&#10TTPA: 24 - 40 seg. &#10RATIO: 0.850 - 1.250"></span></p>
+                <p><strong>BT / BD / BI:</strong> <span id="bilirrubina" title="VR:&#10BT: < 1,20 mg/dL &#10BD: < 0,40 mg/dL &#10BI: < 0,80 mg/dL"></span></p>
+                <p><strong>GASOMETRIA ARTERIAL:</strong> <span id="gasometria" title="VR:&#10 FIO2: correlacionar c/ a clínica &#10 pH: 7,350 - 7,450 &#10 pCO2: 35,0 - 45,0 mmHg &#10 pO2: 83,0 - 108 mmHg &#10 HCO3: 21,0 - 28,0 mmol/L &#10 BE (B): -2 a +3 mmol/L &#10 SatO2: 95 a 98% &#10 Lac: 0 a 2,2 mmol/L"></span></p>
+                <p><strong>GASOMETRIA VENOSA:</strong> <span id="gasometriaVenosa" title="VR:&#10 FIO2: correlacionar c/ a clínica &#10 pH: 7,350 - 7,450 &#10 pCO2: 35,0 - 45,0 mmHg &#10 pO2: 83,0 - 108 mmHg &#10 HCO3: 21,0 - 28,0 mmol/L &#10 BE (B): -2 a +3 mmol/L &#10 SatO2: 95 a 98% &#10 Lac: 0 a 2,20 mmol/L"></span></p>
+                <p><strong>EAS:</strong> <span id="eas" title="VR:&#10 Cor: Amarelo Citrino &#10 Aspecto: Límpido &#10 pH: 5,0 a 7,0 &#10 Densidade: 1.010 a 1.030 &#10 Proteínas: Ausentes &#10 Glicose: Ausente &#10 Cetona: Ausentes &#10 Bilirrubina: Ausente &#10 Sangue: Ausente &#10 Urobilinogênio: Normal &#10 Nitrito: Negativo &#10 Ácido Ascórbico: Ausente &#10 Esterase Leucocitária: Negativo &#10 Células epiteliais: Ausente &#10 Leucócitos / Piócitos: < ou = a 10.000/mL &#10 Hemácias: < ou = a 8.000/mL &#10 Cilindros: Ausente &#10 Cristais: Ausente &#10 Filamentos de Muco: Ausente"></span></p>
+            </div>
             
             </div>
             
             <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
             <script src="script.js"></script>
+            <script src="auth.js"></script> <!-- Adiciona o novo script de autenticação -->
             <script src="tableGenerator.js"></script>
 
 
@@ -178,35 +243,36 @@
             <p><strong>HEMOCULTURA (AERÓBIOS E LEVEDURAS):</strong> <span id="hemocultura" title="VR: NEGATIVO"></span></p>
             <p><strong>PESQUISA DE SANGUE OCULTO:</strong> <span id="sangueoculto" title="VR: NEGATIVO"></span></p>
 
+            <p><strong>LIQUOR ROTINA:</strong> <span id="liquorRotina" title="VR: &#10 Cor: Incolor &#10 Aspecto: Límpido e Incolor &#10 Leocócitos: 0-4/mm³ &#10 Hemácias: 0-4/mm³ &#10 Proteínas: &#10    Prematuros: 15-130 mg/dL &#10    RN Gest. Completa: 40-120 mg/dL &#10    <1 Mês: 20-80 mg/dL &#10    Geral: 15 - 40 mg/dL &#10    Líquido Lombar: 15 - 45 mg/dL &#10 Cloro: 118-132 mEq/L &#10 Glicose: 50-80 mg/dL"></span></p>
+
 
         
         </div>
 
-        <div class="sintese-buttons">
-            <button id="imprimirSinteseButton" class="button">Imprimir</button>
+        <div class="sintese-buttons hidden"> <!-- A div inteira dos botões de síntese começa oculta -->
+            <button id="copiarpuroSinteseButton" title="À pedido de vocês, aqui está uma cópia sem as setinhas e o asterisco!" class="button hidden">Cópia Pura</button>
             <button id="gerarSinteseButton" class="button">Gerar Síntese</button>
             <button id="copiarSinteseButton" class="button">Copiar</button>
         </div>
-        <button id="resetButton" class="button">Escolher Novo Documento</button>
-        <button id="copiarpuroSinteseButton" title="À pedido de vocês, aqui está uma cópia sem as setinhas e o asterisco!" class="button">Cópia Pura!</button>
-
-
+        <button id="resetButton" class="button hidden">Escolher Novo Documento</button>
+        
                 
         <div id="sintese-resultados" class="hidden" contenteditable="true"></div>
-
-
+        
+        <button id="imprimirSinteseButton" class="button hidden">Imprimir</button>
 
         <div class="section-container hidden" id="tabela-section">
-            <h2>Tabela de Exames para Planilha</h2>
-            <button id="gerarTabelaButton" class="action-button">Gerar Tabela</button>
+            <h2>&#x1F4C8;Tabela de Exames para Planilha</h2>
+            <button id="gerarTabelaButton">Gerar Tabela</button>         
             <div id="tabelaContainer" class="hidden" style="margin-top: 20px; overflow-x: auto;">
                 <!-- A tabela e o botão de cópia serão inseridos aqui pelo JavaScript -->
             </div>
         </div>
         
+
         <!-- Nova div para o texto completo do PDF -->
         <div id="full-text-container" class="hidden">
-                <label for="fullTextOutput">Texto bruto extraído do PDF enviado:</label>
+                <label for="fullTextOutput">&#x1F4C4; Texto bruto extraído do PDF enviado:</label>
                 <p id="fullTextOutput"></p>
         </div>
 
@@ -214,7 +280,7 @@
         
         <!--SUPORTE WHATSAPP-->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-            <a href="https://wa.link/il0356" style="position:fixed;width:60px;height:60px;bottom:40px;right:40px;background-color:#25d366;color:#FFF;border-radius:50px;text-align:center;font-size:30px;box-shadow: 1px 1px 2px #888;
+            <a href="https://wa.link/il0356" style="position:fixed;width:60px;height:60px;bottom:60px;right:30px;background-color:#25d366;color:#FFF;border-radius:50px;text-align:center;font-size:30px;box-shadow: 1px 1px 2px #888;
             z-index:1000;" target="_blank">
             <i style="margin-top:16px" class="fa fa-whatsapp"></i>
             </a>
@@ -223,16 +289,16 @@
         <div id="popup-overlay" class="hidden"></div>
         <div id="update-popup" class="popup hidden">
         <span id="close-popup" class="close-btn">&times;</span>
-        <h3>⚕️ Atualização 2.0 (27/04/2025) ⚕️</h3>
-        <h2 class="popup-title-flashy-neon">🤯 ThinkTime 🤯</h2>
+        <h3>⚕️ Atualização 2.1 (12/05/2025) ⚕️</h3>
+        <h2 class="popup-title-flashy-neon">🤯 NeuroTime 🤯</h2>
 
         <ul>
-            <li>Em sua primeira grandiosíssima atualização, a Asklépios atende às demandas de nossos queridos Residentes para, ao toque de um clique, sintetizar de forma clara, lúdica e interativa os exames laboratoriais de nossos pacientes.
-            <li>Trata-se, fundamentalmente, de dar-lhes mais tempo e qualidade no pensar, reduzindo uma atividade que, embora importante, seja exaustiva: anotar diariamente os exames e suas evoluções.
-            <li>Ainda em fase de testes e produção - mas desde já dispobilizada por sua capacidade realmente revolucionária -, essa nova ferramenta possibilita ao usuário coletar os dados em forma de tabela e, com um clique, colá-la no <a> <a href="https://docs.google.com/spreadsheets/d/1Zrw2YbfVAK0_xhzX6b7bNFXw9xjFSCTc3BZ238p-SDs/edit?usp=sharing" target="_blank">modelo</a> por nós dispobilizados, permitindo uma comparação direta entre os valores e, consequentemente, a evolução laboratorial do paciente.</li>
-            <li>Além do mais, pensando em uma maior rapidez, há também uma idenficação por cor enquanto formatação condicional da tabela. Se vermelho claro, os valores estão aquém. Se azul-escuro, estão além.
-            <li>Ao longo dos próximos dias muitas coisas serão ajustadas e refinidas e, para isso, contamos com a colaboração de vocês para nos ajudar a encontrar bugs e/ou problemas no Site. Sintam-se à vontade para entrar em contato através do telefone apresentado no site.
-            <li>De resto, continuem acompanhando nossas atualizações através do Site. Um abraço a todos vocês!
+            <li>Atendendo aos pedidos dos nobres colegas da Neurologia/Neurocirurgia, acrescentamos a "ROTINA LIQUOR" ao banco de dados de nosso Site;
+            <li>Além disso, otimizamos a síntese de "BACILOSCOPIA (BAAR)", "BACTERIOSCOPIA (GRAM)" e "CULTURA DE BACTERIAS AERÓBIAS";
+            <li>Corrigimos também o bug em EAS que não capturava valores com a utilização de ">"", notadamente quando "Leucócitos / Piócitos" se apresentavam como ">1000000";
+            <li>Aguardem por novidades acerca da síntese de dados por intermédio da Tabela e de sua síntese (<a href="https://docs.google.com/spreadsheets/d/1Zrw2YbfVAK0_xhzX6b7bNFXw9xjFSCTc3BZ238p-SDs/edit?usp=sharing" target="_blank">modelo</a>);
+            <li>Acreditamos que neste mês avançaremos para nossa versão RC e, na melhor das possibilidades, Final. 
+            <li>Atentem-se para nossas atualizações do Site. Um abraço a todos vocês!
         </ul>
         <p class="popup-author">By: Waldemar Neto - Interno Turma LXIX<p></p>⚕️ Asklépios Soluções Médicas⚕️
         </div>
@@ -242,8 +308,24 @@
 </div>
 
 <footer class="hidden">
-    <p>Asklépios Soluções Médicas &#x2695;&#xFE0F;<br>Startup by Waldemar Neto - Interno Turma LXIX<br>V.1.1.0 (25/04/2025)</p>
+    <p>Asklépios Soluções Médicas &#x2695;&#xFE0F;<br>Startup by Waldemar Neto - Interno Turma LXIX<br>V.2.1 (12/05/2025)</p>
     </footer>
+
+    </div> <!-- Fim do #app-content -->
+
+
+    <div id="toast-container"></div>
 
     </body>
 </html>
+
+
+<!--AKfycbyNNkAFiz3M4dFgfS6F0m7qDoZKzqGKsNYsefbve7zkejDQwr8k-PNoG6uN77oMUizn
+<https://script.google.com/macros/s/AKfycbyNNkAFiz3M4dFgfS6F0m7qDoZKzqGKsNYsefbve7zkejDQwr8k-PNoG6uN77oMUizn/exec
+
+<!Versão 1 em 12 de mai. de 2025, 00:54
+Código de implantação
+AKfycbz3XByYygx-rE3lckZeIFFGq02eB_utSaSLkK3ksOI1keYlcDpfOh7Dk54GvE7rF7ON
+App da Web
+URL
+https://script.google.com/macros/s/AKfycbz3XByYygx-rE3lckZeIFFGq02eB_utSaSLkK3ksOI1keYlcDpfOh7Dk54GvE7rF7ON/exec
