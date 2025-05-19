@@ -1,8 +1,10 @@
 /* styles.css */
 
+
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #e9ecef;
+    background-color: #f0f2f5; /* Cor base do fundo, como na tela de login */
     margin: 0;
     padding: 0;
     display: flex;
@@ -11,10 +13,37 @@ body {
     min-height: 100vh;
     color: #343a40;
     flex-direction: column; /* Garante que os elementos sejam organizados em coluna */
-    
-
+    position: relative; /* Necessário para o posicionamento absoluto do ::before */
+    overflow-x: hidden; /* Evita barras de rolagem horizontais indesejadas */
 }
 
+/* Pseudo-elemento para aplicar a textura de fundo ao body */
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Aplicando a textura de grade sutil (copiada da tela de login) */
+    background-color: #f8f9fa; /* Cor de fundo da camada da textura */
+    background-image:
+        linear-gradient(rgba(173, 216, 230, 0.15) 1px, transparent 1px), /* Linhas horizontais */
+        linear-gradient(90deg, rgba(173, 216, 230, 0.15) 1px, transparent 1px); /* Linhas verticais */
+    background-size: 15px 15px; /* Tamanho das células da grade */
+    opacity: 0.5; /* Opacidade da camada da textura */
+    z-index: -1; /* Coloca a textura atrás do conteúdo do body */
+}
+
+#app-content {
+    display: flex;
+    flex-direction: column; /* Empilha os filhos do app-content verticalmente */
+    justify-content: center; /* Centraliza o .container verticalmente dentro do app-content */
+    align-items: center;    /* Centraliza o .container horizontalmente dentro do app-content */
+    width: 100%;            /* Faz o app-content ocupar a largura disponível */
+    flex-grow: 1;           /* Permite que o app-content se expanda para preencher o espaço vertical no body */
+    padding: 20px 0;        /* Adiciona um pouco de padding vertical para respiro */
+}
 .container {
     background-color: #fff;
     padding: 30px;
@@ -23,8 +52,9 @@ body {
     text-align: center;
     max-width: 800px;
     width: 95%;
-    margin: 25px;
+    margin: 25px auto; /* Centraliza horizontalmente e mantém margens verticais */
 }
+
 
 h1 {
     margin-bottom: 30px;
@@ -61,15 +91,6 @@ input[type="file"] {
     overflow: hidden; /* Added overflow: hidden */
 }
 
-/* Estilo para linhas ÍMPARES */
-#results p:nth-child(odd) {
-    background-color: #ffffff;
-}
-
-/* Estilo para linhas PARES */
-#results p:nth-child(even) {
-    background-color: #f8f9fa;
-}
 
 #results strong {
     font-weight: 600;
@@ -90,24 +111,29 @@ input[type="file"] {
 
 #resetButton {
     background-color: #007bff;
+    border: 1px solid #007bff; /* Adicionando borda para consistência */
     color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
+    padding: 8px 24px; /* Padronizando padding */
+    border-radius: 8px; /* Padronizando border-radius */
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 0px; /* Mantendo a margem superior em 0 */
-    margin-bottom: 20px; /* Adicionando a margem inferior de 20 pixels */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Padronizando transição */
+    font-size: 16px; /* Padronizando font-size */
+    font-weight: 500; /* Padronizando font-weight */
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1); /* Padronizando box-shadow */
+    text-transform: none; /* Padronizando text-transform */
+    text-align: center; /* Garantindo alinhamento do texto */
     display: block; /* Garante que o botão fique em uma nova linha */
     width: 100%; /* Faz o botão ocupar toda a largura disponível */
-    max-width: 300px; /* Define uma largura máxima para o botão */
-    margin-left: auto;
-    margin-right: auto;
+    max-width: 10000px; /* Define uma largura máxima para o botão */
+    margin: 0 auto 30px auto; /* Centraliza e adiciona margem inferior */
+    height: auto; /* Padronizando altura */
 }
 
 
 #resetButton:hover {
     background-color: #0056b3;
+    border-color: #0056b3; /* Consistência na borda */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); /* Padronizando sombra no hover */
 }
 
 /* Media Queries para Responsividade */
@@ -176,23 +202,31 @@ input[type="file"] {
     color: #0056b3;
 }
 
-#scrollToTopButton {
+
+#sairButton {
     position: absolute;
     left: 10px; /* Posiciona o botão à esquerda */
     top: 3px; /* Move o botão 3 pixels para BAIXO */
 
 }
 
-#imprimirIconeSinteseButton {
+#scrollToTopButton {
     position: absolute;
     left: 45px; /* Posiciona o botão à esquerda */
     top: 3px; /* Move o botão 3 pixels para BAIXO */
 
 }
 
-#copiarpuroIconeSinteseButton {
+#imprimirIconeSinteseButton {
     position: absolute;
     left: 80px; /* Posiciona o botão à esquerda */
+    top: 3px; /* Move o botão 3 pixels para BAIXO */
+
+}
+
+#copiarpuroIconeSinteseButton {
+    position: absolute;
+    left: 115px; /* Posiciona o botão à esquerda */
     top: 3px; /* Move o botão 3 pixels para BAIXO */
 
 }
@@ -426,15 +460,7 @@ input[type="file"] {
     overflow: hidden; /* Added overflow: hidden */
 }
 
-/* Estilo para linhas ÍMPARES */
-#results-especificos p:nth-child(odd) {
-    background-color: #ffffff;
-}
 
-/* Estilo para linhas PARES */
-#results-especificos p:nth-child(even) {
-    background-color: #f8f9fa;
-}
 
 #results-especificos strong {
     font-weight: 600;
@@ -471,16 +497,44 @@ input[type="file"] {
 
 #full-text-container label {
     font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
+    margin-bottom: 5px;cursor: pointer;      /* Indica que o label é clicável */
+    display: block;       /* Garante que o label ocupe a linha inteira para o clique */
+    position: relative;   /* Para posicionar a seta indicadora */
+    padding-right: 25px;  /* Espaço para a seta */
 }
 
-#full-text-container p {
+
+/* Seta indicadora para o estado colapsado/expandido */
+#full-text-container label::after {
+    content: '▼'; /* Seta para baixo (colapsado) */
+    position: absolute;
+    right: 10px; /* Posição da seta à direita do label */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.8em;
+    transition: transform 0.2s ease-in-out; /* Animação suave da seta */
+}
+
+#full-text-container.expanded label::after {
+    content: '▲'; /* Seta para cima (expandido) */
+}
+
+/* Estilo para o conteúdo do texto completo */
+#full-text-container p#fullTextOutput {
     white-space: pre-wrap; /* Mantém as quebras de linha do texto */
     font-family: monospace; /* Usa uma fonte monoespaçada para melhor visualização */
     overflow-y: auto;
     max-height: 300px;
+    display: none; /* Começa oculto */
+    margin-top: 10px; /* Adiciona um espaço entre o label e o texto quando expandido */
 }
+
+/* Mostra o conteúdo quando a div pai tem a classe .expanded */
+#full-text-container.expanded p#fullTextOutput {
+    display: block;
+}
+ 
+
 
 
 /*SÍNTESE DOS RESULTADOSSSSSSSSSSSSSSSSSSS*/
@@ -503,7 +557,7 @@ input[type="file"] {
 
 
 /* Estilos para a seção de resultados (id="results") */
-#results, #dados-gerais {
+#results, #dados-gerais, #tabela-section {
     text-align: left;
     margin-top: 20px;
     padding: 15px;
@@ -519,15 +573,7 @@ input[type="file"] {
     overflow: hidden; /* Added overflow: hidden */
 }
 
-/* Estilo para linhas ÍMPARES */
-#results p:nth-child(odd), #dados-gerais p:nth-child(odd) {
-    background-color: #ffffff;
-}
 
-/* Estilo para linhas PARES */
-#results p:nth-child(even), #dados-gerais p:nth-child(even) {
-    background-color: #f8f9fa;
-}
 
 #results strong, #dados-gerais strong {
     font-weight: 600;
@@ -550,9 +596,8 @@ input[type="file"] {
 
 /* Estilos para o botão "Copiar (Puro)" */
 #copiarpuroSinteseButton {
-    /* --- Estilos copiados de #copiarSinteseButton --- */
     color: white;
-    padding: 12px 24px;
+    padding: 10px 24px;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
@@ -563,20 +608,22 @@ input[type="file"] {
     display: inline-block; /* Garante que fique na mesma linha dos outros */
     text-align: center;
     width: auto;
-    min-width: 100px; /* Mantém a largura mínima consistente */
+    min-width: 220px; /* Mantém a largura mínima consistente */
+    /* Ajuste para min-width: 150px; se quiser um pouco maior como os outros */
     height: auto;
-    margin-bottom: 20px; /* Mantém a margem consistente */
+    margin: 10px; /* Padronizando margem */
 
     /* --- Cor específica para este botão --- */
     background-color: #225d00; 
-    border: 1px solid #225d00; 
+    border: 1px solid #225d00;
 }
 
 #copiarpuroSinteseButton:hover {
     /* --- Sombra copiada de #copiarSinteseButton:hover --- */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
     /* --- Cor específica de hover para este botão --- */
-    background-color: #01320d;
+    background-color: #01320d; 
+    border-color: #01320d; /* Consistência na borda */
 }
 
 /*---------------*/
@@ -585,7 +632,7 @@ input[type="file"] {
 #gerarSinteseButton {
     background-color: #4a90e2; /* Azul mais suave e moderno */
     color: white;
-    padding: 12px 24px; /* Aumentando um pouco o padding */
+    padding: 10px 24px; /* Aumentando um pouco o padding */
     border: 1px solid #4a90e2; /* Adicionando uma borda fina da mesma cor do fundo */
     border-radius: 8px; /* Aumentando um pouco o arredondamento */
     cursor: pointer;
@@ -597,14 +644,15 @@ input[type="file"] {
     display: inline-block;
     text-align: center;
     width: auto; /* Deixando a largura automática */
-    min-width: 180px; /* Largura mínima */
+    min-width: 320px; /* Mantendo largura mínima específica se desejado, ou padronize */
     height: auto; /* Deixando a altura automática */
-    margin: 20px;
+    margin: 10px; /* Padronizando margem, ou mantenha 20px se preferir mais espaço */
 }
 
 /* Efeito hover para o botão "Gerar Síntese" - Versão Moderna e Sutil */
 #gerarSinteseButton:hover {
     background-color: #357abd; /* Azul mais escuro e suave no hover */
+    border-color: #357abd; /* Consistência na borda */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15); /* Sombra mais pronunciada no hover */
 }
 
@@ -612,7 +660,7 @@ input[type="file"] {
 #copiarSinteseButton {
     background-color: #4CAF50; /* Verde */
     color: white;
-    padding: 12px 24px;
+    padding: 10px 24px;
     border: 1px solid #4CAF50;
     border-radius: 8px;
     cursor: pointer;
@@ -625,6 +673,7 @@ input[type="file"] {
     text-align: center;
     width: auto;
     min-width: 100px;
+    min-width: 220px; /* Padronizando min-width */
     height: auto;
     margin: 10px;
 }
@@ -632,13 +681,15 @@ input[type="file"] {
 #copiarSinteseButton:hover {
     background-color: #367c39; /* Verde mais escuro no hover */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+    border-color: #367c39; /* Consistência na borda */
 }
+
 
 /* Estilos para o botão "Imprimir" */
 #imprimirSinteseButton {
     background-color: #FFD700; /* Amarelo */
     color: rgb(255, 255, 255); /* Cor do texto para melhor contraste */
-    padding: 12px 24px;
+    padding: 10px 24px;
     border: 1px solid #FFD700; /* Borda amarela */
     border-radius: 8px;
     cursor: pointer;
@@ -650,21 +701,26 @@ input[type="file"] {
     display: inline-block;
     text-align: center;
     width: auto;
-    min-width: 100px;
-    height: auto;
-    margin: 10px;
+    min-width: 150px;
+    height: auto;    
+    margin: 10px 10px 10px 30px; /* Adiciona margem esquerda de 30px */
+    margin-left: auto; /* Alinha o botão à direita */
 }
 
 #imprimirSinteseButton:hover {
     background-color: #e0c000; /* Amarelo mais escuro no hover */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+    border-color: #e0c000; /* Consistência na borda */
 }
+
 
 
 .sintese-buttons{
     display: flex;
     justify-content: center;
     align-items: center;
+        margin-top: 20px; /* Adiciona um espaçamento de 20px acima desta div */
+
 }
 
 footer {
@@ -809,4 +865,549 @@ footer {
     text-align: center; /* Centraliza */
     margin-bottom: 20px; /* Espaçamento abaixo */
     animation: gradientBG 10s ease infinite; /* Animação do gradiente */
+}
+
+
+
+/* styles.css */
+
+/* ... seus estilos existentes ... */
+
+#login-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%; /* Garante que o login-screen ocupe toda a largura */
+    background-color: #f0f2f5; /* Um fundo suave */
+    position: relative; /* Necessário para o posicionamento absoluto dos pseudo-elementos */
+    overflow: hidden; /* Para evitar que o blur dos pseudo-elementos cause barras de rolagem */
+}
+
+#login-screen::before,
+#login-screen::after {
+    content: ""; /* Conteúdo vazio é necessário para pseudo-elementos */
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%; /* Largura de cada faixa lateral com a imagem. Ajuste conforme necessário. */
+    /* Aplicando uma textura de grade sutil */
+    background-color: #f8f9fa; /* Cor de fundo base bem clara, quase branca */
+    background-image:
+        linear-gradient(rgba(173, 216, 230, 0.15) 1px, transparent 1px), /* Linhas horizontais azuis muito claras e finas */
+        linear-gradient(90deg, rgba(173, 216, 230, 0.15) 1px, transparent 1px); /* Linhas verticais azuis muito claras e finas */
+    background-size: 15px 15px; /* Tamanho das células da grade (15px por 15px) */
+    opacity: 0.5; /* Opacidade para ver através, se necessário */
+    z-index: 0; /* Coloca os pseudo-elementos atrás do conteúdo do login */
+}
+
+.signup-prompt-container {
+    background-color: white;
+    padding: 10px 40px; /* Mesmo padding do login-container */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    width: 100%;
+    max-width: 400px; /* Mesma largura máxima do login-container */
+    margin-top: 15px; /* Espaçamento entre a caixa de login e esta nova caixa */
+    position: relative; /* Para garantir o empilhamento correto se necessário */
+    z-index: 1; /* Para ficar acima dos pseudo-elementos de fundo */
+}
+
+
+
+.signup-prompt-container p {
+    margin-bottom: 10px;
+    font-size: 1em;
+    color: #0c0c0c;
+    line-height: 0.7; /* Espaçamento entre linhas ajustado */
+}
+
+.signup-prompt-container a {
+    color: #28a745; /* Cor verde do botão de login para consistência */
+    text-decoration: underline;
+}
+
+#login-screen::before {
+    left: 0; /* Posiciona o primeiro pseudo-elemento na lateral esquerda */
+}
+
+#login-screen::after {
+    right: 0; /* Posiciona o segundo pseudo-elemento na lateral direita */
+}
+
+.login-container {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    width: 100%;
+    max-width: 400px; /* Limita a largura do container de login */    
+    position: relative; /* Garante que o z-index funcione corretamente */
+    z-index: 1; /* Coloca o container de login na frente dos pseudo-elementos de fundo */
+}
+
+.login-container h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.login-container p {
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: calc(100% - 22px); /* Ajusta para padding e borda */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.login-container button {
+    width: 95%;
+    padding: 10px;
+    background-color: #229c47; /* Cor primária do botão */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.login-container button:hover {
+    background-color: #105f10; /* Cor mais escura no hover */
+}
+
+/* Estilo para o botão de login durante o carregamento */
+.login-container button.button-loading {
+    position: relative; /* Necessário para o posicionamento do spinner */
+    padding-right: 30px; /* Espaço para o spinner */
+}
+
+.login-container button.button-loading::after {
+    content: '';
+    position: absolute;
+    right: 10px; /* Posição do spinner à direita */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px; /* Tamanho do spinner */
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.5); /* Cor da borda do spinner */
+    border-top-color: #fff; /* Cor da parte superior do spinner (que gira) */
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+/* Estilo para a logo da empresa na tela de login */
+.login-logo-empresa {
+    max-width: 250px; /* Ajuste o tamanho máximo conforme necessário */
+    height: auto;     /* Mantém a proporção da imagem */
+    display: block;   /* Ajuda com margens e centralização */
+    margin-left: auto; /* Centraliza a imagem se display: block */
+    margin-right: auto;/* Centraliza a imagem se display: block */
+    opacity: 1; /* Garante que a imagem não esteja transparente */
+}
+
+/* Estilos para o contêiner da logo */
+.logo-container {
+    background-color: white;
+    padding: 20px; /* Ajuste o padding conforme necessário */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center; /* Para centralizar a imagem se ela for inline-block */
+    width: 100%;
+    max-width: 440px; /* Mesma largura máxima do login-container */
+    margin-left: auto; /* Centraliza o container da logo */
+    margin-right: auto; /* Centraliza o container da logo */
+    margin-bottom: 15px; /* Espaço entre a logo e a caixa de login abaixo */
+    position: relative; /* Para garantir o empilhamento correto */
+    z-index: 1; /* Para ficar acima dos pseudo-elementos de fundo, se houver */
+}
+
+
+@keyframes spin {
+    to {
+        transform: translateY(-50%) rotate(360deg);
+    }
+}
+
+.login-container button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+/* Classe para esconder elementos */
+.hidden {
+    display: none !important;
+}
+
+/* Ajuste para o conteúdo principal quando o login estiver ativo */
+/* #app-content.hidden {
+    display: none;
+} */ /* A classe .hidden já faz isso */
+
+/* Caixa de exibição do usuário logado */
+#user-display-box {
+    position: fixed;
+    bottom: 15px; /* Distância da base da tela */
+    right: 30px;  /* Distância da direita da tela */
+    background-color: #f8f9fa; /* Cor de fundo suave */
+    color: #2c3e50; /* Cor do texto */
+    padding: 8px 12px;
+    border: 1px solid #dee2e6; /* Borda sutil */
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: bold;
+    z-index: 1050; /* Para garantir que fique acima de outros elementos, como o popup */
+    display: none; /* Inicialmente oculto */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra suave */
+    cursor: pointer; /* Indica que é clicável */
+    transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease; /* Transição suave */
+}
+
+/* Efeito ao passar o mouse sobre a caixa do usuário */
+#user-display-box:hover {
+    background-color: red; /* Cor de fundo vermelha */
+    color: white; /* Cor do texto branca para contraste */
+    transform: scale(1.05); /* Leve aumento de tamanho (zoom) */
+}
+
+/* Estilo para cores alternadas nas linhas da tabela de resultados */
+.results-table tbody tr:nth-child(even) {
+    background-color: #f8f9fa; /* Um cinza bem claro para linhas pares */
+}
+
+.results-table tbody tr:nth-child(odd) {
+    background-color: #ffffff; /* Branco para linhas ímpares */
+}
+
+
+
+/* Estilo para a logo Neto Group no canto inferior direito */
+#logo-neto-watermark {
+    position: fixed;
+    bottom: 20px; /* Distância da parte inferior */
+    right: 20px;  /* Distância da parte direita (ajustado para não sobrepor tanto o WhatsApp) */
+    width: 90px;   /* Ajuste a largura conforme necessário */
+    height: auto;  /* Mantém a proporção */
+    opacity: 0.3;  /* 50% de opacidade */
+    z-index: 999;  /* Abaixo do ícone do WhatsApp (que tem z-index: 1000) */
+    pointer-events: none; /* Para que não interfira com cliques em elementos abaixo, se necessário */
+}
+
+/* Estilo para o botão "Copiar" dos exames não catalogados */
+.copy-unlisted-button {
+    background-color: #268f3e; /* Verde (mesma cor do botão de login) */
+    border: 1px solid #176b2c;
+    color: white;
+    padding: 8px 2px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+    text-transform: none;
+    text-align: center;
+    display: inline-block; /* Altera para inline-block para alinhar à esquerda via text-align do pai */
+    width: auto;
+    min-width: 150px;
+    margin: 12px auto 10px auto; /* Margem superior, laterais auto para centralizar, inferior */
+}
+
+.copy-unlisted-button:hover {
+    background-color: #20572c; /* Verde mais escuro no hover */
+    border-color: #218838;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Estilo específico para o botão de Copiar Tabela Editada */
+#copiarTabelaButton {
+    /* Estilos base (geralmente de .button) */
+    display: block; /* Faz o botão se comportar como um bloco */
+    width: -moz-fit-content; /* Para Firefox */
+    width: fit-content;   /* Faz a largura se ajustar ao conteúdo */
+    margin-left: auto;    /* Centraliza horizontalmente */
+    margin-right: auto;   /* Centraliza horizontalmente */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px; /* Ajuste conforme o seu .button */
+    cursor: pointer;
+    font-size: 1em; /* Ajuste conforme o seu .button */
+    transition: background-color 0.3s ease;
+    margin-top: 10px; /* Ajuste conforme o seu .button ou .copy-unlisted-button */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Exemplo, ajuste conforme seu .button */
+
+    /* Estilos específicos (geralmente de .copy-unlisted-button) */
+    background-color: #28a745; /* Cor verde do botão de copiar não catalogados */
+    /* Se .copy-unlisted-button tiver outras propriedades como margin-left, adicione aqui */
+    /* Exemplo: margin-left: 10px; */
+}
+
+#copiarTabelaButton:hover {
+    background-color: #218838; /* Cor verde mais escura no hover */
+}
+
+
+/* Estilo específico para o botão de Gerar Tabela */
+#gerarTabelaButton {
+    display: block; /* Faz o botão se comportar como um bloco */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    width: -moz-fit-content; /* Para Firefox */
+    
+    transition: background-color 0.3s ease;
+    margin-top: 10px; /* Espaçamento após o título da seção */
+    margin-bottom: 15px; /* Espaçamento antes do container da tabela */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: #004080; /* Azul escuro */
+}
+
+#gerarTabelaButton:hover {
+    background-color: #003366; /* Azul escuro (um pouco mais escuro no hover) */
+}
+
+
+
+
+/* Estilos para Toasts/Snackbars */
+#toast-container {
+    position: fixed;
+    font-weight: bold;
+    bottom: 20px; /* Ajuste para 'top' se preferir no topo */
+    right: 20px; /* Espaço da borda da tela para o container */
+    z-index: 10000; /* Garante que fique por cima de outros elementos */
+    display: flex;
+    flex-direction: column-reverse; /* Novos toasts aparecem em cima dos antigos */
+    align-items: flex-end;
+}
+
+.toast {
+    background-color: #333;
+    position: relative; /* Necessário para posicionar o botão 'x' absolutamente */
+    color: #fff;
+    padding: 12px 40px 12px 20px; /* Aumenta o padding direito para dar espaço ao 'x' */
+    border-radius: 8px; /* Mais arredondado para efeito de balão */
+    margin-top: 10px;
+    margin-right: 10px; /* Espaço para a cauda do balão se projetar */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: translateY(20px); /* Começa um pouco abaixo para animação */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    font-size: 0.9em;
+    max-width: 300px;
+    word-wrap: break-word;
+}
+
+.toast::after {
+    content: '';
+    position: absolute;
+    top: 50%; /* Centraliza verticalmente a cauda */
+    left: 100%; /* Posiciona a cauda à direita do toast (início do triângulo) */
+    transform: translateY(-50%); /* Ajuste fino para centralização vertical */
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 10px solid; /* A cor desta borda forma o triângulo. A ponta é para a direita. */
+    /* A cor específica será definida abaixo para cada tipo de toast */
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.success {
+    background-color: #4CAF50; /* Verde */
+}
+
+.toast.warning {
+    background-color: #ff9800; /* Laranja */
+}
+
+.toast.error {
+    background-color: #f44336; /* Vermelho */
+}
+.toast.info {
+    background-color: #2196F3; /* Azul */
+}
+
+/* Cores da cauda para cada tipo de toast */
+.toast.success::after { border-left-color: #4CAF50; }
+.toast.warning::after { border-left-color: #ff9800; }
+.toast.error::after   { border-left-color: #f44336; }
+.toast.info::after    { border-left-color: #2196F3; }
+.toast::after { /* Cor da cauda para o toast base (cinza escuro #333) */
+    border-left-color: #333; /* Garante que o toast base também tenha sua cauda colorida */
+}
+
+.toast-close-btn {
+    position: absolute;
+    top: 50%;
+    right: 12px; /* Ajustado para melhor espaçamento com o novo border-radius */
+    transform: translateY(-110%); /* Corrigido para centralização vertical correta */
+    background: none;
+    border: none;
+    color: inherit; /* Herda a cor do texto do toast (geralmente branco) */
+    font-size: 1.6em; /* Tamanho do 'x' */
+    font-weight: bold;
+    line-height: 1; /* Para evitar altura extra que possa desalinhá-lo */
+    cursor: pointer;
+    padding: 0 2px; /* Pequeno padding para facilitar o clique */
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+.toast-close-btn:hover {
+    opacity: 1;
+}
+
+/* styles.css */
+
+#dados-gerais > p.odd,
+#results p.odd, /* Alterado para pegar <p> dentro de subseções também */
+#results-especificos > p.odd {
+    background-color: #f0f0f0; /* Cinza claro para linhas ímpares */
+    /* padding: 2px 5px; */ /* Opcional: para dar um respiro */
+}
+
+#dados-gerais > p.even,
+#results p.even, /* Alterado para pegar <p> dentro de subseções também */
+#results-especificos > p.even {
+    background-color: #ffffff; /* Branco para linhas pares (ou a cor de fundo padrão da seção) */
+    /* padding: 2px 5px; */ /* Opcional: para dar um respiro */
+}
+
+/* Garante que o label dentro do <p> não cubra o fundo zebrado */
+#dados-gerais p > label,
+#results p > label,
+#results-especificos p > label,
+#dados-gerais p > span, /* Se o texto estiver em spans dentro do p */
+#results p > span,
+#results-especificos p > span {
+    background-color: transparent !important; /* Tenta forçar a transparência */
+}
+
+
+
+#hemograma-section {
+    border: 1px solid #e0e0e0; /* Borda sutil */
+    padding: 10px 10px 5px 15px; /* Padding: topo direita baixo esquerda */ 
+    margin-top: 8px; /* Espaço acima do bloco */
+    margin-bottom: 15px; /* Espaço abaixo do bloco */
+    margin-left: -15px; /* Compensa o padding esquerdo de 15px do #results */
+    margin-right: -15px; /* Compensa o padding direito de 15px do #results */
+    border-radius: 4px; /* Cantos arredondados */
+    /* width: 100%; */ /* Removido para permitir que as margens negativas expandam o bloco corretamente */
+    box-sizing: border-box; /* Garante que padding e border não aumentem a largura efetiva além de 100% */
+}
+
+/* Ajuste para os parágrafos dentro do hemograma, se necessário */
+#hemograma-section p {
+    margin-bottom: 8px; /* Espaçamento entre os itens do hemograma */
+}
+#hemograma-section p:last-child {
+    margin-bottom: 5px; /* Menor margem no último item para alinhar com o padding inferior do bloco */
+}
+
+/* Se você adicionar um título dentro de #hemograma-section, como o comentado no HTML: */
+
+#hemograma-section > p:first-child {
+    font-weight: bold;
+    margin-left: -5px; /* Para alinhar com os labels dos exames se o padding esquerdo for 15px */
+    margin-bottom: 10px;
+}
+
+
+#eletrolitos-section {
+    border: 1px solid #e0e0e0; /* Borda sutil */
+    padding: 10px 10px 5px 15px; /* Padding: topo direita baixo esquerda */
+    margin-top: 8px; /* Espaço acima do bloco */
+    margin-left: -15px;
+    margin-right: -15px;
+    margin-bottom: 15px; /* Espaço abaixo do bloco */
+    border-radius: 4px; /* Cantos arredondados */
+}
+
+/* Ajuste para os parágrafos dentro da seção de eletrólitos, se necessário */
+#eletrolitos-section p {
+    margin-bottom: 8px; /* Espaçamento entre os itens */
+}
+#eletrolitos-section p:last-child {
+    margin-bottom: 5px; /* Menor margem no último item para alinhar com o padding inferior do bloco */
+}
+
+/* Se você adicionar um título dentro de #eletrolitos-section, como o do HTML: */
+
+#eletrolitos-section > p:first-child {
+    font-weight: bold;
+    margin-left: -5px; /* Para alinhar com os labels dos exames se o padding esquerdo for 15px */
+    margin-bottom: 10px;
+}
+
+
+/* Adicione ao final do seu styles.css ou junto com os estilos de #results, #hemograma-section, etc. */
+
+#demais-section {
+    border: 1px solid #e0e0e0; /* Borda sutil */
+    padding: 10px 10px 5px 15px; /* Padding: topo direita baixo esquerda */ 
+    margin-top: 8px; /* Espaço acima do bloco */
+    margin-bottom: 15px; /* Espaço abaixo do bloco */
+    margin-left: -15px; /* Compensa o padding esquerdo de 15px do #results */
+    margin-right: -15px; /* Compensa o padding direito de 15px do #results */
+    border-radius: 4px; /* Cantos arredondados */
+    box-sizing: border-box;
+}
+
+/* Ajuste para os parágrafos dentro da seção "Demais", se necessário */
+#demais-section p {
+    margin-bottom: 8px; /* Espaçamento entre os itens */
+    /* Se o conteúdo dos <p> precisar de um recuo, adicione padding-left aqui: */
+    /* padding-left: 15px; */
+}
+#demais-section p:last-child {
+    margin-bottom: 5px; /* Menor margem no último item */
+}
+
+
+#demais-section > p:first-child {
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+
+
+.section-title-modern {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; /* Bold */
+    text-align: center;
+    font-size: 1.1em; /* Ajuste o tamanho */
+    margin-top: 15px;
+    margin-bottom: 15px;
+    color: #2c3e50; /* Um azul escuro/cinza moderno */
+    text-transform: uppercase; /* Deixa tudo em maiúsculo, se gostar */
+    letter-spacing: 1px; /* Pequeno espaçamento entre letras */
+    background-color: #ffffff !important; /* Garante fundo branco para os títulos de seção */
 }
