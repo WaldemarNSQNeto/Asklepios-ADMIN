@@ -1187,7 +1187,27 @@ footer {
     background-color: #003366; /* Azul escuro (um pouco mais escuro no hover) */
 }
 
+/* Estilo específico para o botão de Gerar Tabela */
+#gerarTabelaButtonCV {
+    display: block; /* Faz o botão se comportar como um bloco */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    width: -moz-fit-content; /* Para Firefox */
+    
+    transition: background-color 0.3s ease;
+    margin-top: 10px; /* Espaçamento após o título da seção */
+    margin-bottom: 15px; /* Espaçamento antes do container da tabela */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: #004080; /* Azul escuro */
+}
 
+#gerarTabelaButtonCV:hover {
+    background-color: #003366; /* Azul escuro (um pouco mais escuro no hover) */
+}
 
 
 /* Estilos para Toasts/Snackbars */
